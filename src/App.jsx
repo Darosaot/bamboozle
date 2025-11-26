@@ -3,6 +3,7 @@ import ModeSelection from './components/ModeSelection';
 import PlayerSetup from './components/PlayerSetup';
 import GameScreen from './components/GameScreen';
 import ResultsScreen from './components/ResultsScreen';
+import Leaderboard from './components/Leaderboard';
 import { usePlayer } from './hooks/usePlayer';
 import { useQuestions } from './hooks/useQuestions';
 import { useTimer } from './hooks/useTimer';
@@ -19,6 +20,7 @@ function App() {
   const [difficulty, setDifficulty] = useState('normal');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [showResults, setShowResults] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [round, setRound] = useState(1);
 
@@ -218,6 +220,7 @@ function App() {
     setGameMode(null);
     setGameStarted(false);
     setShowResults(false);
+    setShowLeaderboard(false);
     setCurrentPlayer(1);
     setRound(1);
     setAnsweredCorrectly(null);
@@ -263,10 +266,17 @@ function App() {
   };
 
   // Render appropriate screen
+  if (showLeaderboard) {
+    return (
+      <Leaderboard onBack={() => setShowLeaderboard(false)} />
+    );
+  }
+
   if (!gameMode) {
     return (
       <ModeSelection
         onSelectMode={handleSelectMode}
+        onViewLeaderboard={() => setShowLeaderboard(true)}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
       />
@@ -296,6 +306,7 @@ function App() {
         player1={player1Hook.player}
         player2={player2Hook.player}
         round={round}
+        difficulty={difficulty}
         onPlayAgain={resetGame}
       />
     );

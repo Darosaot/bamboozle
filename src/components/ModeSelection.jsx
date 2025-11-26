@@ -1,8 +1,8 @@
 import React from 'react';
-import { Baby, User, Users, Volume2, VolumeX } from 'lucide-react';
+import { Baby, User, Users, Volume2, VolumeX, Trophy } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 
-const ModeSelection = ({ onSelectMode, soundEnabled, onToggleSound }) => {
+const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggleSound }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center">
@@ -35,13 +35,23 @@ const ModeSelection = ({ onSelectMode, soundEnabled, onToggleSound }) => {
           </button>
         </div>
 
-        <button
-          onClick={onToggleSound}
-          className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-all flex items-center justify-center gap-2"
-        >
-          {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-          {soundEnabled ? 'Sonido ON' : 'Sonido OFF'}
-        </button>
+        <div className="space-y-3">
+          <button
+            onClick={onViewLeaderboard}
+            className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-black py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105"
+          >
+            <Trophy size={24} />
+            VER TABLA DE CLASIFICACIÓN
+          </button>
+
+          <button
+            onClick={onToggleSound}
+            className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-all flex items-center justify-center gap-2"
+          >
+            {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+            {soundEnabled ? 'Sonido ON' : 'Sonido OFF'}
+          </button>
+        </div>
       </div>
     </div>
   );
