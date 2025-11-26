@@ -1,5 +1,5 @@
 [build]
-  command = "node setup-db.cjs && npm test && npm run build"
+  command = "npm test && npm run build"
   publish = "dist"
 
 [functions]
@@ -12,6 +12,3 @@
 
 [build.environment]
   NODE_VERSION = "18"
-
-[[plugins]]
-  package = "@netlify/plugin-database"
