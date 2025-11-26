@@ -1,0 +1,16 @@
+export const wangoCards = [
+  { text: "¡WICKED WANGO! El bebé hizo caca explosiva. ¡Pierdes 100 puntos!", effect: -100, color: "bg-orange-500" },
+  { text: "¡SUPER WANGO! ¡El bebé durmió toda la noche! ¡Duplicas tus puntos!", effect: "double", color: "bg-green-500" },
+  { text: "¡MEGA WANGO! Confundiste la crema del pañal con pasta de dientes. ¡Pierdes un turno pero ganas 150 puntos!", effect: 150, color: "bg-purple-500" },
+  { text: "¡WANGO REVERSE! ¡El bebé sonrió! Recuperas 200 puntos.", effect: 200, color: "bg-blue-500" },
+  { text: "¡ULTRA WANGO! ¡Compraste el cochecito más caro! Pierdes 250 puntos.", effect: -250, color: "bg-red-500" },
+  { text: "¡BABY WANGO! La abuela te regaló dinero. ¡Ganas 400 puntos!", effect: 400, color: "bg-yellow-500" },
+  { text: "¡CHAOS WANGO! ¡El bebé regurgitó! Tu puntuación se divide entre 2.", effect: "half", color: "bg-pink-500" },
+  { text: "¡LUCKY WANGO! ¡Pañales en oferta! ¡Ganas 300 puntos!", effect: 300, color: "bg-teal-500" },
+  { text: "¡STREAK WANGO! ¡Tu racha vale oro! Ganas 150 puntos extra por racha.", effect: "streak", color: "bg-indigo-500" },
+  { text: "¡LIFE WANGO! ¡El bebé te dio un beso! Recuperas 1 vida.", effect: "life", color: "bg-rose-500" },
+  { text: "¡MYSTERY WANGO! ¿Suerte o desastre? ¡Descúbrelo!", effect: "mystery", color: "bg-purple-700" },
+  { text: "¡TRIPLE WANGO! ¡Triple suerte! ¡Triplicas tus puntos!", effect: "triple", color: "bg-amber-500" },
+  { text: "¡MIDNIGHT WANGO! El bebé no durmió. ¡Pierdes 150 puntos!", effect: -150, color: "bg-gray-700" },
+  { text: "¡VACCINE WANGO! Primera vacuna sin llorar. ¡Ganas 250 puntos!", effect: 250, color: "bg-cyan-500" },
+];
