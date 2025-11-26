@@ -1,39 +1,54 @@
-import React, { useEffect } from 'react';
-import { Trophy } from 'lucide-react';
+import React, { useState } from 'react';
+import { Trophy, Save } from 'lucide-react';
 import { getRank } from '../utils/scoreCalculator';
 import { GAME_MODES } from '../constants/gameConfig';
-import { addScore } from '../db';
 
 const ResultsScreen = ({
   gameMode,
   player1,
   player2,
   round,
-  onPlayAgain,
-  onShowLeaderboard,
-  difficulty
+  difficulty,
+  onPlayAgain
 }) => {
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(null);
 
-  useEffect(() => {
-    if (gameMode === GAME_MODES.SOLO) {
-      const saveScore = async () => {
-        try {
-          await addScore({
-            playerName: player1.name,
-            score: player1.score,
-            difficulty: difficulty,
-            gameMode: gameMode,
-            streak: player1.streak,
-            roundsWon: round - 1,
-          });
-        } catch (error) {
-          console.error('Error saving score:', error);
-        }
-      };
-      saveScore();
+  const saveScore = async (playerName, score, streak, roundsWon) => {
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      const response = await fetch('/api/save-score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          playerName,
+          score,
+          difficulty: difficulty || 'normal',
+          gameMode: gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
+          streak,
+          roundsWon
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSaved(true);
+      } else {
+        setSaveError(data.error || 'Failed to save score');
+      }
+    } catch (error) {
+      console.error('Error saving score:', error);
+      setSaveError('Could not save score. Please try again.');
+    } finally {
+      setSaving(false);
     }
-  }, []);
-
+  };
   if (gameMode === GAME_MODES.SOLO) {
     const rank = getRank(player1.score);
 
@@ -64,19 +79,37 @@ const ResultsScreen = ({
             </div>
           </div>
 
-          <button
-            onClick={onShowLeaderboard}
-            className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black text-xl py-4 rounded-xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all shadow-lg mb-4"
-          >
-            VER CLASIFICACIÓN
-          </button>
+          <div className="space-y-3">
+            {!saved && (
+              <button
+                onClick={() => saveScore(player1.name, player1.score, player1.streak, player1.roundsWon)}
+                disabled={saving}
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black text-xl py-4 rounded-xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <Save className="w-6 h-6" />
+                {saving ? 'GUARDANDO...' : '¡GUARDAR EN TABLA!'}
+              </button>
+            )}
 
-          <button
-            onClick={onPlayAgain}
-            className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
-          >
-            ¡JUGAR DE NUEVO!
-          </button>
+            {saved && (
+              <div className="bg-green-100 border-2 border-green-500 rounded-xl p-4 text-green-700 font-bold text-center">
+                ✅ ¡Puntuación guardada en la tabla de clasificación!
+              </div>
+            )}
+
+            {saveError && (
+              <div className="bg-red-100 border-2 border-red-500 rounded-xl p-4 text-red-700 font-bold text-center text-sm">
+                {saveError}
+              </div>
+            )}
+
+            <button
+              onClick={onPlayAgain}
+              className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
+            >
+              ¡JUGAR DE NUEVO!
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -121,12 +154,47 @@ const ResultsScreen = ({
           </div>
         </div>
 
-        <button
-          onClick={onPlayAgain}
-          className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
-        >
-          ¡JUGAR DE NUEVO!
-        </button>
+        <div className="space-y-3">
+          {!saved && (
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => saveScore(player1.name, player1.score, player1.streak, player1.roundsWon)}
+                disabled={saving}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-black text-lg py-3 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <Save className="w-5 h-5" />
+                {player1.name}
+              </button>
+              <button
+                onClick={() => saveScore(player2.name, player2.score, player2.streak, player2.roundsWon)}
+                disabled={saving}
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-black text-lg py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 transform hover:scale-105 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <Save className="w-5 h-5" />
+                {player2.name}
+              </button>
+            </div>
+          )}
+
+          {saved && (
+            <div className="bg-green-100 border-2 border-green-500 rounded-xl p-4 text-green-700 font-bold text-center">
+              ✅ ¡Puntuación guardada en la tabla de clasificación!
+            </div>
+          )}
+
+          {saveError && (
+            <div className="bg-red-100 border-2 border-red-500 rounded-xl p-4 text-red-700 font-bold text-center text-sm">
+              {saveError}
+            </div>
+          )}
+
+          <button
+            onClick={onPlayAgain}
+            className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
+          >
+            ¡JUGAR DE NUEVO!
+          </button>
+        </div>
       </div>
     </div>
   );

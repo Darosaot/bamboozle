@@ -267,16 +267,18 @@ function App() {
 
   // Render appropriate screen
   if (showLeaderboard) {
-    return <Leaderboard onBack={resetGame} />;
+    return (
+      <Leaderboard onBack={() => setShowLeaderboard(false)} />
+    );
   }
 
   if (!gameMode) {
     return (
       <ModeSelection
         onSelectMode={handleSelectMode}
+        onViewLeaderboard={() => setShowLeaderboard(true)}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
-        onShowLeaderboard={() => setShowLeaderboard(true)}
       />
     );
   }
@@ -304,9 +306,8 @@ function App() {
         player1={player1Hook.player}
         player2={player2Hook.player}
         round={round}
-        onPlayAgain={resetGame}
-        onShowLeaderboard={() => setShowLeaderboard(true)}
         difficulty={difficulty}
+        onPlayAgain={resetGame}
       />
     );
   }
