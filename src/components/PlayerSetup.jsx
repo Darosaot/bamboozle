@@ -34,7 +34,7 @@ const PlayerSetup = ({
           placeholder="Jugador 1"
           value={player1Name}
           onChange={(e) => onPlayer1NameChange(e.target.value)}
-          className="w-full px-4 py-3 border-4 border-purple-400 rounded-xl mb-4 text-lg font-bold text-center focus:outline-none focus:border-purple-600"
+          className="w-full px-4 py-3 border-4 border-purple-400 rounded-xl mb-4 text-lg font-bold text-center text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-600 bg-white"
         />
 
         {gameMode === GAME_MODES.TWO_PLAYER && (
@@ -43,7 +43,7 @@ const PlayerSetup = ({
             placeholder="Jugador 2"
             value={player2Name}
             onChange={(e) => onPlayer2NameChange(e.target.value)}
-            className="w-full px-4 py-3 border-4 border-pink-400 rounded-xl mb-4 text-lg font-bold text-center focus:outline-none focus:border-pink-600"
+            className="w-full px-4 py-3 border-4 border-pink-400 rounded-xl mb-4 text-lg font-bold text-center text-gray-800 placeholder-gray-400 focus:outline-none focus:border-pink-600 bg-white"
           />
         )}
 
