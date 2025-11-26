@@ -1,15 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Trophy } from 'lucide-react';
 import { getRank } from '../utils/scoreCalculator';
 import { GAME_MODES } from '../constants/gameConfig';
+import { addScore } from '../db';
 
 const ResultsScreen = ({
   gameMode,
   player1,
   player2,
   round,
-  onPlayAgain
+  onPlayAgain,
+  onShowLeaderboard,
+  difficulty
 }) => {
+
+  useEffect(() => {
+    if (gameMode === GAME_MODES.SOLO) {
+      const saveScore = async () => {
+        try {
+          await addScore({
+            playerName: player1.name,
+            score: player1.score,
+            difficulty: difficulty,
+            gameMode: gameMode,
+            streak: player1.streak,
+            roundsWon: round - 1,
+          });
+        } catch (error) {
+          console.error('Error saving score:', error);
+        }
+      };
+      saveScore();
+    }
+  }, []);
+
   if (gameMode === GAME_MODES.SOLO) {
     const rank = getRank(player1.score);
 
@@ -39,6 +63,13 @@ const ResultsScreen = ({
               <p className="text-3xl font-black text-green-600">{player1.streak}</p>
             </div>
           </div>
+
+          <button
+            onClick={onShowLeaderboard}
+            className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black text-xl py-4 rounded-xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all shadow-lg mb-4"
+          >
+            VER CLASIFICACIÓN
+          </button>
 
           <button
             onClick={onPlayAgain}

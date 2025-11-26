@@ -1,8 +1,8 @@
 import React from 'react';
-import { Baby, User, Users, Volume2, VolumeX } from 'lucide-react';
+import { Baby, User, Users, Volume2, VolumeX, Trophy } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 
-const ModeSelection = ({ onSelectMode, soundEnabled, onToggleSound }) => {
+const ModeSelection = ({ onSelectMode, soundEnabled, onToggleSound, onShowLeaderboard }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center">
@@ -34,6 +34,14 @@ const ModeSelection = ({ onSelectMode, soundEnabled, onToggleSound }) => {
             <p className="text-sm">Compite con un amigo</p>
           </button>
         </div>
+
+        <button
+          onClick={onShowLeaderboard}
+          className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black text-xl py-4 rounded-xl hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all shadow-lg mb-4 flex items-center justify-center gap-2"
+        >
+          <Trophy className="w-6 h-6" />
+          VER CLASIFICACIÓN
+        </button>
 
         <button
           onClick={onToggleSound}
