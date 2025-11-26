@@ -77,5 +77,45 @@ export const questions = [
   { q: "¿Qué es la mastitis?", options: ["Una enfermedad del bebé", "Inflamación de la mama", "Un tipo de parto", "Una vitamina"], correct: 1, points: 250, difficulty: 'hard' },
   { q: "¿Cuánto tiempo tarda en caerse el cordón umbilical?", options: ["3-5 días", "7-14 días", "20-30 días", "40-50 días"], correct: 1, points: 200, difficulty: 'hard' },
   { q: "¿Qué es el síndrome de aspiración meconial?", options: ["Tragar meconio durante el parto", "No hacer caca", "Una enfermedad digestiva", "Un reflejo"], correct: 0, points: 300, difficulty: 'hard' },
-  { q: "¿Cuántas horas debe estar un bebé en su silla del coche?", options: ["30 minutos máximo", "1 hora máximo", "2 horas máximo", "Sin límite"], correct: 2, points: 250, difficulty: 'hard' }
+  { q: "¿Cuántas horas debe estar un bebé en su silla del coche?", options: ["30 minutos máximo", "1 hora máximo", "2 horas máximo", "Sin límite"], correct: 2, points: 250, difficulty: 'hard' },
+
+  // Más Preguntas Fáciles
+  { q: "¿Cuándo empiezan a caminar la mayoría de bebés?", options: ["6-8 meses", "9-11 meses", "12-15 meses", "16-18 meses"], correct: 2, points: 100, difficulty: 'easy' },
+  { q: "¿Cuánto mide aproximadamente un recién nacido?", options: ["35-40 cm", "45-50 cm", "50-55 cm", "55-60 cm"], correct: 2, points: 100, difficulty: 'easy' },
+  { q: "¿A qué edad pueden los bebés comer pescado?", options: ["4 meses", "6 meses", "9 meses", "12 meses"], correct: 2, points: 100, difficulty: 'easy' },
+  { q: "¿Cuántas veces al día hace caca un recién nacido?", options: ["1-2", "3-4", "5-8", "10-12"], correct: 2, points: 100, difficulty: 'easy' },
+  { q: "¿A qué edad pueden los bebés usar vaso con pajita?", options: ["6 meses", "9 meses", "12 meses", "18 meses"], correct: 2, points: 100, difficulty: 'easy' },
+  { q: "¿Cuándo pueden los bebés comer fresas?", options: ["6 meses", "8 meses", "10 meses", "12 meses"], correct: 0, points: 100, difficulty: 'easy' },
+  { q: "¿A qué edad los bebés pueden aplaudir?", options: ["4-6 meses", "7-9 meses", "10-12 meses", "13-15 meses"], correct: 1, points: 100, difficulty: 'easy' },
+  { q: "¿Cuántos ml de leche toma un recién nacido por toma?", options: ["10-30 ml", "60-90 ml", "120-150 ml", "180-210 ml"], correct: 1, points: 150, difficulty: 'easy' },
+  { q: "¿A qué edad pueden ver claramente los bebés?", options: ["Al nacer", "1 mes", "3 meses", "6 meses"], correct: 3, points: 100, difficulty: 'easy' },
+  { q: "¿Cuándo pueden los bebés usar protector solar?", options: ["3 meses", "6 meses", "9 meses", "12 meses"], correct: 1, points: 150, difficulty: 'easy' },
+  { q: "¿A qué edad los bebés empiezan a balbucear?", options: ["1-2 meses", "3-4 meses", "5-6 meses", "7-8 meses"], correct: 2, points: 100, difficulty: 'easy' },
+  { q: "¿Cuándo pueden los bebés comer pan?", options: ["6 meses", "8 meses", "10 meses", "12 meses"], correct: 0, points: 100, difficulty: 'easy' },
+
+  // Más Preguntas Normales
+  { q: "¿Qué es el eructo?", options: ["Expulsión de gases", "Una enfermedad", "Un reflejo", "Un tipo de llanto"], correct: 0, points: 150, difficulty: 'normal' },
+  { q: "¿Cuándo se puede bañar al bebé después de nacer?", options: ["Inmediatamente", "24 horas después", "Una semana después", "Dos semanas después"], correct: 1, points: 150, difficulty: 'normal' },
+  { q: "¿Qué es el sueño REM en bebés?", options: ["Sueño profundo", "Sueño ligero con movimientos oculares", "Sueño sin sueños", "Insomnio"], correct: 1, points: 200, difficulty: 'normal' },
+  { q: "¿Cuándo se puede introducir la carne en la dieta del bebé?", options: ["4 meses", "6 meses", "8 meses", "10 meses"], correct: 1, points: 150, difficulty: 'normal' },
+  { q: "¿Qué es el contacto piel con piel?", options: ["Un masaje", "Poner al bebé desnudo sobre el pecho", "Una crema", "Un tipo de ropa"], correct: 1, points: 150, difficulty: 'normal' },
+  { q: "¿Cuándo pueden los bebés reconocer caras?", options: ["Al nacer", "1 mes", "2-3 meses", "6 meses"], correct: 2, points: 200, difficulty: 'normal' },
+  { q: "¿Qué es la ansiedad por separación?", options: ["Una enfermedad", "Miedo cuando se aleja el cuidador", "Un tipo de llanto", "Una alergia"], correct: 1, points: 200, difficulty: 'normal' },
+  { q: "¿A qué edad aparece la ansiedad por separación?", options: ["2-4 meses", "4-6 meses", "8-10 meses", "12-14 meses"], correct: 2, points: 150, difficulty: 'normal' },
+  { q: "¿Qué es el desarrollo psicomotor?", options: ["Solo el movimiento", "Desarrollo físico y mental", "Solo el habla", "Solo la visión"], correct: 1, points: 200, difficulty: 'normal' },
+  { q: "¿Cuándo pueden los bebés imitar gestos?", options: ["3-4 meses", "6-7 meses", "9-10 meses", "12-13 meses"], correct: 2, points: 150, difficulty: 'normal' },
+  { q: "¿Qué es el pinzamiento del cordón umbilical?", options: ["Cortarlo inmediatamente", "Esperar a que deje de latir", "Dejarlo sin cortar", "Una complicación"], correct: 1, points: 200, difficulty: 'normal' },
+  { q: "¿Cuántos meses deben pasar entre hermanos (idealmente)?", options: ["6 meses", "12 meses", "18-24 meses", "36 meses"], correct: 2, points: 150, difficulty: 'normal' },
+
+  // Más Preguntas Difíciles
+  { q: "¿Qué es la distocia de hombros?", options: ["Un reflejo", "Complicación en el parto", "Una posición para dormir", "Un tipo de llanto"], correct: 1, points: 250, difficulty: 'hard' },
+  { q: "¿Cuántas neuronas tiene un recién nacido?", options: ["50 mil millones", "86 mil millones", "100 mil millones", "200 mil millones"], correct: 2, points: 300, difficulty: 'hard' },
+  { q: "¿Qué es el test de Ballard?", options: ["Test de audición", "Evaluación de edad gestacional", "Test de visión", "Test de reflejos"], correct: 1, points: 300, difficulty: 'hard' },
+  { q: "¿Cuál es la circunferencia craneal promedio al nacer?", options: ["30-32 cm", "33-35 cm", "36-38 cm", "39-41 cm"], correct: 1, points: 250, difficulty: 'hard' },
+  { q: "¿Qué es la galactosemia?", options: ["Exceso de leche", "Intolerancia a la lactosa genética", "Alergia a la leche", "Falta de leche"], correct: 1, points: 300, difficulty: 'hard' },
+  { q: "¿Cuándo se fusionan los huesos del cráneo?", options: ["6 meses", "12 meses", "18-24 meses", "3-4 años"], correct: 2, points: 250, difficulty: 'hard' },
+  { q: "¿Qué porcentaje del sueño de un recién nacido es REM?", options: ["20%", "30%", "40%", "50%"], correct: 3, points: 300, difficulty: 'hard' },
+  { q: "¿Qué es el síndrome de Pierre Robin?", options: ["Problema respiratorio", "Malformación craneofacial", "Problema digestivo", "Problema cardíaco"], correct: 1, points: 300, difficulty: 'hard' },
+  { q: "¿Cuántos ciclos de sueño tiene un bebé por noche?", options: ["2-3", "4-6", "8-10", "12-15"], correct: 2, points: 250, difficulty: 'hard' },
+  { q: "¿Qué es el score de Capurro?", options: ["Test de reflejos", "Evaluación de madurez física", "Test de audición", "Test de visión"], correct: 1, points: 300, difficulty: 'hard' }
 ];
