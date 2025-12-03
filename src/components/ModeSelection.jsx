@@ -1,6 +1,7 @@
 import React from 'react';
 import { Baby, User, Users, Volume2, VolumeX, Trophy } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
+import AdBanner from './AdBanner';
 
 const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggleSound }) => {
   return (
@@ -52,6 +53,9 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggle
             {soundEnabled ? 'Sonido ON' : 'Sonido OFF'}
           </button>
         </div>
+
+        {/* Google AdSense Banner */}
+        <AdBanner />
       </div>
     </div>
   );

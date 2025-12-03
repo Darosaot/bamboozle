@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Medal, Crown, ArrowLeft, Filter } from 'lucide-react';
+import AdBanner from './AdBanner';
 
 const Leaderboard = ({ onBack }) => {
   const [scores, setScores] = useState([]);
@@ -192,6 +193,11 @@ const Leaderboard = ({ onBack }) => {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Google AdSense Banner */}
+        <div className="bg-white rounded-3xl shadow-2xl p-6 mt-4">
+          <AdBanner />
         </div>
       </div>
     </div>
