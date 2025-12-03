@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trophy } from 'lucide-react';
 import { getRank } from '../utils/scoreCalculator';
 import { GAME_MODES } from '../constants/gameConfig';
+import AdBanner from './AdBanner';
 
 const ResultsScreen = ({
   gameMode,
@@ -97,6 +98,9 @@ const ResultsScreen = ({
           >
             ¡JUGAR DE NUEVO!
           </button>
+
+          {/* Google AdSense Banner */}
+          <AdBanner />
         </div>
       </div>
     );
@@ -153,6 +157,9 @@ const ResultsScreen = ({
         >
           ¡JUGAR DE NUEVO!
         </button>
+
+        {/* Google AdSense Banner */}
+        <AdBanner />
       </div>
     </div>
   );
