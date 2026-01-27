@@ -26,6 +26,7 @@ export default function AdBanner({
 
   return (
     <div className={`ad-container my-4 ${className}`}>
+      <div className="text-xs text-gray-500 text-center mb-1">Publicidad</div>
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
@@ -34,6 +35,9 @@ export default function AdBanner({
         data-ad-format={format}
         data-full-width-responsive={responsive.toString()}
       />
+      <div className="text-xs text-gray-400 text-center mt-1">
+        Los anuncios nos ayudan a mantener este servicio gratuito
+      </div>
     </div>
   );
 }
