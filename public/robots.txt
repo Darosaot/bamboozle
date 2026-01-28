@@ -1,0 +1,26 @@
+# robots.txt for Bamboozle Baby Deluxe
+# Allow all search engines to index all content
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://bamboozle-baby-deluxe.netlify.app/sitemap.xml
+
+# Explicitly allow important pages
+Allow: /privacidad
+Allow: /terminos
+Allow: /acerca
+Allow: /recursos
+Allow: /preguntas-frecuentes
+Allow: /ayuda
+
+# Allow crawling of assets
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.svg$
+
+# Crawl delay (be nice to servers)
+Crawl-delay: 1
