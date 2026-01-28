@@ -1,23 +1,35 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Baby, Heart, Brain, Users, Target, Award, BookOpen } from 'lucide-react';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
-      <div className="max-w-4xl mx-auto">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-all"
-        >
-          <ArrowLeft size={20} />
-          Volver al Inicio
-        </Link>
+    <>
+      <Helmet>
+        <title>Sobre Nosotros | Bamboozle Baby Deluxe</title>
+        <meta name="description" content="Conoce Bamboozle Baby Deluxe: juego educativo con +190 preguntas sobre embarazo, bebés y paternidad. Nuestra misión es hacer el aprendizaje divertido y accesible." />
+        <link rel="canonical" href="https://bamboozle-baby-deluxe.netlify.app/acerca" />
+      </Helmet>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
-          <h1 className="text-4xl font-bold text-purple-600 mb-6 text-center">
-            Sobre Bamboozle Baby Deluxe
-          </h1>
+      <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
+        <div className="max-w-4xl mx-auto">
+          <Breadcrumbs items={[{ label: 'Sobre Nosotros' }]} />
+
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-all"
+            aria-label="Volver a la página principal"
+          >
+            <ArrowLeft size={20} />
+            Volver al Inicio
+          </Link>
+
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+            <h1 className="text-4xl font-bold text-purple-600 mb-6 text-center">
+              Sobre Bamboozle Baby Deluxe
+            </h1>
 
           <div className="prose max-w-none">
             <section className="mb-8">
@@ -342,5 +354,6 @@ export default function About() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -1,23 +1,35 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
-      <div className="max-w-4xl mx-auto">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-all"
-        >
-          <ArrowLeft size={20} />
-          Volver al Inicio
-        </Link>
+    <>
+      <Helmet>
+        <title>Política de Privacidad | Bamboozle Baby Deluxe</title>
+        <meta name="description" content="Política de privacidad de Bamboozle Baby Deluxe. Información sobre recopilación de datos, uso de cookies y Google AdSense." />
+        <link rel="canonical" href="https://bamboozle-baby-deluxe.netlify.app/privacidad" />
+      </Helmet>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
-          <h1 className="text-4xl font-bold text-purple-600 mb-6 text-center">
-            Política de Privacidad
-          </h1>
+      <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
+        <div className="max-w-4xl mx-auto">
+          <Breadcrumbs items={[{ label: 'Política de Privacidad' }]} />
+
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-all"
+            aria-label="Volver a la página principal"
+          >
+            <ArrowLeft size={20} />
+            Volver al Inicio
+          </Link>
+
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+            <h1 className="text-4xl font-bold text-purple-600 mb-6 text-center">
+              Política de Privacidad
+            </h1>
 
           <p className="text-gray-600 mb-4 text-center">
             Última actualización: {new Date().toLocaleDateString('es-ES')}
@@ -262,5 +274,6 @@ export default function PrivacyPolicy() {
         </div>
       </div>
     </div>
+    </>
   );
 }

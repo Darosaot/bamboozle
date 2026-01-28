@@ -48,7 +48,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.who.int/es/health-topics/child-health"
+                  href="https://www.who.int/health-topics/child-health"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
