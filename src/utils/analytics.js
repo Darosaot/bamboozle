@@ -17,7 +17,7 @@ export const trackEvent = (eventName, eventParams = {}) => {
  */
 export const trackPageView = (pagePath) => {
   if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('config', 'G-XXXXXXXXXX', {
+    window.gtag('config', 'G-R9ZV6HF35B', {
       page_path: pagePath,
     });
   }
