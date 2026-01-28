@@ -3,6 +3,8 @@ import { Trophy } from 'lucide-react';
 import { getRank } from '../utils/scoreCalculator';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
+import SocialShare from './SocialShare';
+import ReferralCard from './ReferralCard';
 
 const ResultsScreen = ({
   gameMode,
@@ -92,6 +94,12 @@ const ResultsScreen = ({
             </div>
           )}
 
+          {/* Social Share Buttons */}
+          <SocialShare score={player1.score} gameMode={gameMode} difficulty={difficulty} />
+
+          {/* Referral Card */}
+          <ReferralCard playerName={player1.name} />
+
           <button
             onClick={onPlayAgain}
             className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
@@ -150,6 +158,16 @@ const ResultsScreen = ({
             ✅ Puntuaciones guardadas
           </div>
         )}
+
+        {/* Social Share Buttons */}
+        <SocialShare
+          score={player1.score > player2.score ? player1.score : player2.score}
+          gameMode={gameMode}
+          difficulty={difficulty}
+        />
+
+        {/* Referral Card - Show winner's referral */}
+        <ReferralCard playerName={player1.score > player2.score ? player1.name : player2.name} />
 
         <button
           onClick={onPlayAgain}

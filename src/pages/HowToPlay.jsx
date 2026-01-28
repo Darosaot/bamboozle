@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Gamepad2, Users, Trophy, Zap, AlertTriangle, Timer, Heart, Target } from 'lucide-react';
+import AdBanner from '../components/AdBanner';
 
 export default function HowToPlay() {
   return (
@@ -371,6 +372,11 @@ export default function HowToPlay() {
                 ¡Comenzar a Jugar!
               </Link>
             </div>
+          </div>
+
+          {/* Google AdSense Banner */}
+          <div className="mt-8">
+            <AdBanner slot="auto" format="auto" responsive={true} />
           </div>
         </div>
       </div>

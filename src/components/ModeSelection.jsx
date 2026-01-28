@@ -2,6 +2,7 @@ import React from 'react';
 import { Baby, User, Users, Volume2, VolumeX, Trophy } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
+import DailyChallengeCard from './DailyChallengeCard';
 
 const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggleSound }) => {
   return (
@@ -34,6 +35,15 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggle
             <h3 className="text-2xl font-black mb-2">2 JUGADORES</h3>
             <p className="text-sm">Compite con un amigo</p>
           </button>
+        </div>
+
+        {/* Daily Challenge Card */}
+        <div className="my-6">
+          <DailyChallengeCard onStartChallenge={(challenge) => {
+            // Store challenge info in localStorage
+            localStorage.setItem('dailyChallenge', JSON.stringify(challenge));
+            onSelectMode(GAME_MODES.SOLO);
+          }} />
         </div>
 
         <div className="space-y-3">

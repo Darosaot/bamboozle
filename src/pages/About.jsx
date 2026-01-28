@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Baby, Heart, Brain, Users, Target, Award, BookOpen } from 'lucide-react';
 import Breadcrumbs from '../components/Breadcrumbs';
+import AdBanner from '../components/AdBanner';
 
 export default function About() {
   return (
@@ -350,6 +351,11 @@ export default function About() {
                 </Link>
               </div>
             </section>
+          </div>
+
+          {/* Google AdSense Banner */}
+          <div className="mt-8">
+            <AdBanner slot="auto" format="auto" responsive={true} />
           </div>
         </div>
       </div>
