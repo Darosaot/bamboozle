@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import GameApp from './components/GameApp';
@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
 import NavigationMenu from './components/NavigationMenu';
 import ErrorBoundary from './components/ErrorBoundary';
+import { trackPageView } from './utils/analytics';
 
 // Lazy load pages for better performance
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
@@ -30,6 +31,11 @@ function LoadingSpinner() {
 
 function AppContent() {
   const location = useLocation();
+
+  // Track page views in Google Analytics
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);
 
   // Show footer on all pages except game screens
   const showFooter = location.pathname !== '/';

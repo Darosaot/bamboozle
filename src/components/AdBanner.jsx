@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { trackAdImpression } from '../utils/analytics';
 
 /**
  * AdBanner Component for Google AdSense
@@ -19,10 +20,13 @@ export default function AdBanner({
       if (window.adsbygoogle && Array.isArray(window.adsbygoogle)) {
         window.adsbygoogle.push({});
       }
+
+      // Track ad impression in Google Analytics
+      trackAdImpression(slot || 'default');
     } catch (error) {
       console.error('AdSense error:', error);
     }
-  }, []);
+  }, [slot]);
 
   return (
     <div className={`ad-container my-4 ${className}`}>

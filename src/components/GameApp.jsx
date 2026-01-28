@@ -12,6 +12,7 @@ import { sabotageCards } from '../data/sabotageCards';
 import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES } from '../constants/gameConfig';
 import { calculateScore } from '../utils/scoreCalculator';
 import { applyWangoEffect, applySabotageEffect } from '../utils/cardEffects';
+import { trackGameStart, trackGameEnd } from '../utils/analytics';
 
 export default function GameApp() {
   // Game state
@@ -23,6 +24,7 @@ export default function GameApp() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [round, setRound] = useState(1);
+  const [gameStartTime, setGameStartTime] = useState(null);
 
   // Question state
   const [answeredCorrectly, setAnsweredCorrectly] = useState(null);
@@ -61,6 +63,7 @@ export default function GameApp() {
     setGameStarted(true);
     setRound(1);
     setCurrentPlayer(1);
+    setGameStartTime(Date.now());
 
     player1Hook.resetPlayer(settings.lives, settings.time);
 
@@ -71,6 +74,12 @@ export default function GameApp() {
     resetQuestions();
     loadNewQuestion();
     setTimerActive(true);
+
+    // Track game start in Google Analytics
+    trackGameStart(
+      gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
+      difficulty
+    );
   };
 
   const handleAnswer = (selectedIndex) => {
@@ -214,6 +223,21 @@ export default function GameApp() {
   const endGame = () => {
     setShowResults(true);
     setTimerActive(false);
+
+    // Track game end in Google Analytics
+    if (gameStartTime) {
+      const duration = Math.floor((Date.now() - gameStartTime) / 1000); // Duration in seconds
+      const finalScore = gameMode === GAME_MODES.SOLO
+        ? player1Hook.player.score
+        : Math.max(player1Hook.player.score, player2Hook.player.score);
+
+      trackGameEnd(
+        gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
+        difficulty,
+        finalScore,
+        duration
+      );
+    }
   };
 
   const resetGame = () => {
