@@ -21,6 +21,7 @@ const GameScreen = ({
   totalRounds,
   maxLives,
   maxTime,
+  timeFrozen,
   onAnswer,
   onUseFiftyFifty,
   onUseTimeFreeze,
@@ -32,6 +33,13 @@ const GameScreen = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 p-4">
       <div className="max-w-6xl mx-auto">
+        {/* Time Frozen Indicator */}
+        {timeFrozen && (
+          <div className="bg-cyan-500 text-white text-center py-3 rounded-2xl mb-4 animate-pulse shadow-lg">
+            <span className="text-2xl font-black">❄️ TIEMPO CONGELADO ❄️</span>
+          </div>
+        )}
+
         {/* Player Stats */}
         {isSolo ? (
           <div className="mb-6">
@@ -41,6 +49,7 @@ const GameScreen = ({
               maxLives={maxLives}
               maxTime={maxTime}
               isSolo={true}
+              timeFrozen={timeFrozen}
             />
           </div>
         ) : (
@@ -50,12 +59,14 @@ const GameScreen = ({
               isCurrentPlayer={currentPlayer === 1}
               maxLives={maxLives}
               maxTime={maxTime}
+              timeFrozen={currentPlayer === 1 && timeFrozen}
             />
             <PlayerStats
               player={player2}
               isCurrentPlayer={currentPlayer === 2}
               maxLives={maxLives}
               maxTime={maxTime}
+              timeFrozen={currentPlayer === 2 && timeFrozen}
             />
           </div>
         )}

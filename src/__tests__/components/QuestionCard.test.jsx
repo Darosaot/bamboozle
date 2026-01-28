@@ -59,7 +59,9 @@ describe('QuestionCard', () => {
       />
     );
 
-    expect(screen.getByText('¡CORRECTO! 🎉')).toBeInTheDocument();
+    // Check for the correct feedback text (now includes points info)
+    expect(screen.getByText(/¡CORRECTO!/)).toBeInTheDocument();
+    expect(screen.getByText(/\+100 puntos/)).toBeInTheDocument();
   });
 
   it('should show incorrect message when answer is wrong', () => {
@@ -74,7 +76,9 @@ describe('QuestionCard', () => {
       />
     );
 
-    expect(screen.getByText('¡INCORRECTO! 😬')).toBeInTheDocument();
+    // Check for the incorrect feedback text (now includes points penalty)
+    expect(screen.getByText(/¡INCORRECTO!/)).toBeInTheDocument();
+    expect(screen.getByText(/-50 puntos/)).toBeInTheDocument();
   });
 
   it('should hide removed options', () => {

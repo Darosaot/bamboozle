@@ -1,4 +1,5 @@
 export const wangoCards = [
+  // Original cards
   { text: "¡WICKED WANGO! El bebé hizo caca explosiva. ¡Pierdes 100 puntos!", effect: -100, color: "bg-orange-500" },
   { text: "¡SUPER WANGO! ¡El bebé durmió toda la noche! ¡Duplicas tus puntos!", effect: "double", color: "bg-green-500" },
   { text: "¡MEGA WANGO! Confundiste la crema del pañal con pasta de dientes. ¡Pierdes un turno pero ganas 150 puntos!", effect: 150, color: "bg-purple-500" },
@@ -13,4 +14,18 @@ export const wangoCards = [
   { text: "¡TRIPLE WANGO! ¡Triple suerte! ¡Triplicas tus puntos!", effect: "triple", color: "bg-amber-500" },
   { text: "¡MIDNIGHT WANGO! El bebé no durmió. ¡Pierdes 150 puntos!", effect: -150, color: "bg-gray-700" },
   { text: "¡VACCINE WANGO! Primera vacuna sin llorar. ¡Ganas 250 puntos!", effect: 250, color: "bg-cyan-500" },
+
+  // New cards for more variety
+  { text: "¡DIAPER DISASTER WANGO! El pañal explotó en público. ¡Pierdes 175 puntos!", effect: -175, color: "bg-amber-700" },
+  { text: "¡FIRST STEPS WANGO! ¡El bebé dio sus primeros pasos! ¡Ganas 350 puntos!", effect: 350, color: "bg-emerald-500" },
+  { text: "¡TEETHING WANGO! El bebé mordió todo lo que encontró. ¡Pierdes 75 puntos!", effect: -75, color: "bg-orange-600" },
+  { text: "¡GRANDPA WANGO! El abuelo vino de visita. ¡Ganas 500 puntos!", effect: 500, color: "bg-amber-600" },
+  { text: "¡FORMULA FAIL WANGO! Derramaste la leche. ¡Pierdes 125 puntos!", effect: -125, color: "bg-slate-500" },
+  { text: "¡PHOTO PERFECT WANGO! ¡Conseguiste la foto perfecta! ¡Ganas 275 puntos!", effect: 275, color: "bg-fuchsia-500" },
+  { text: "¡NAP TIME WANGO! El bebé se durmió en tus brazos. ¡Recuperas 1 vida!", effect: "life", color: "bg-violet-400" },
+  { text: "¡BABY FOOD WANGO! El bebé probó su primera papilla. ¡Ganas 225 puntos!", effect: 225, color: "bg-lime-500" },
+  { text: "¡CRYING MARATHON WANGO! 3 horas de llanto sin parar. ¡Pierdes 200 puntos!", effect: -200, color: "bg-red-600" },
+  { text: "¡DOCTOR VISIT WANGO! ¡Revisión perfecta! ¡Ganas 300 puntos!", effect: 300, color: "bg-sky-500" },
+  { text: "¡MIRACLE WANGO! ¡Milagro de la noche! ¡Triplicas tus puntos!", effect: "triple", color: "bg-gradient-to-r from-yellow-400 to-orange-500" },
+  { text: "¡BATH TIME WANGO! El bebé chapoteó en la bañera. ¡Ganas 150 puntos!", effect: 150, color: "bg-blue-400" },
 ];
