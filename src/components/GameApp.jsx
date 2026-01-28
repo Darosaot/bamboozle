@@ -32,6 +32,11 @@ export default function GameApp() {
   const [wangoCard, setWangoCard] = useState(null);
   const [sabotageCard, setSabotageCard] = useState(null);
   const [timerActive, setTimerActive] = useState(false);
+  const [timeFrozen, setTimeFrozen] = useState(false);
+
+  // Best streak tracking
+  const [player1BestStreak, setPlayer1BestStreak] = useState(0);
+  const [player2BestStreak, setPlayer2BestStreak] = useState(0);
 
   // Custom hooks
   const player1Hook = usePlayer();
@@ -66,9 +71,11 @@ export default function GameApp() {
     setGameStartTime(Date.now());
 
     player1Hook.resetPlayer(settings.lives, settings.time);
+    setPlayer1BestStreak(0);
 
     if (gameMode === GAME_MODES.TWO_PLAYER) {
       player2Hook.resetPlayer(settings.lives, settings.time);
+      setPlayer2BestStreak(0);
     }
 
     resetQuestions();
@@ -95,8 +102,16 @@ export default function GameApp() {
     if (correct) {
       playerHook.updateStreak(true);
       playerHook.incrementRoundsWon();
-      const bonus = calculateScore(currentQuestion.points, player.timeLeft, player.streak + 1);
+      const newStreak = player.streak + 1;
+      const bonus = calculateScore(currentQuestion.points, player.timeLeft, newStreak);
       playerHook.updateScore(bonus);
+
+      // Update best streak
+      if (currentPlayer === 1) {
+        setPlayer1BestStreak(prev => Math.max(prev, newStreak));
+      } else {
+        setPlayer2BestStreak(prev => Math.max(prev, newStreak));
+      }
     } else {
       playerHook.updateScore(-50);
       playerHook.updateStreak(false);
@@ -108,10 +123,10 @@ export default function GameApp() {
       }
     }
 
-    // Card probability
-    if (Math.random() > CARD_PROBABILITIES.WANGO_BASE) {
+    // Card probability - trigger card if random is less than the probability
+    if (Math.random() < CARD_PROBABILITIES.WANGO_BASE) {
       setTimeout(() => {
-        if (gameMode === GAME_MODES.TWO_PLAYER && Math.random() > CARD_PROBABILITIES.SABOTAGE_IN_WANGO) {
+        if (gameMode === GAME_MODES.TWO_PLAYER && Math.random() < CARD_PROBABILITIES.SABOTAGE_IN_WANGO) {
           const randomSabotage = sabotageCards[Math.floor(Math.random() * sabotageCards.length)];
           setSabotageCard(randomSabotage);
           setTimeout(() => {
@@ -284,8 +299,12 @@ export default function GameApp() {
 
     if (playerHook.player.powerUps.timeFreeze > 0) {
       setTimerActive(false);
+      setTimeFrozen(true);
       playerHook.usePowerUp('timeFreeze');
-      setTimeout(() => setTimerActive(true), 10000);
+      setTimeout(() => {
+        setTimeFrozen(false);
+        setTimerActive(true);
+      }, 10000);
     }
   };
 
@@ -329,6 +348,8 @@ export default function GameApp() {
         gameMode={gameMode}
         player1={player1Hook.player}
         player2={player2Hook.player}
+        player1BestStreak={player1BestStreak}
+        player2BestStreak={player2BestStreak}
         round={round}
         difficulty={difficulty}
         onPlayAgain={resetGame}
@@ -353,6 +374,7 @@ export default function GameApp() {
       totalRounds={settings.totalRounds}
       maxLives={settings.lives}
       maxTime={settings.time}
+      timeFrozen={timeFrozen}
       onAnswer={handleAnswer}
       onUseFiftyFifty={useFiftyFifty}
       onUseTimeFreeze={useTimeFreeze}

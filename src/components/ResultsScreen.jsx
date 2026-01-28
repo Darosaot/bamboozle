@@ -10,6 +10,8 @@ const ResultsScreen = ({
   gameMode,
   player1,
   player2,
+  player1BestStreak = 0,
+  player2BestStreak = 0,
   round,
   difficulty,
   onPlayAgain
@@ -20,7 +22,7 @@ const ResultsScreen = ({
   useEffect(() => {
     const saveScores = async () => {
       try {
-        // Save player 1 score
+        // Save player 1 score (use best streak instead of current)
         await fetch('/api/save-score', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -29,7 +31,7 @@ const ResultsScreen = ({
             score: player1.score,
             difficulty: difficulty || 'normal',
             gameMode: gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
-            streak: player1.streak,
+            streak: player1BestStreak,
             roundsWon: player1.roundsWon
           })
         });
@@ -44,7 +46,7 @@ const ResultsScreen = ({
               score: player2.score,
               difficulty: difficulty || 'normal',
               gameMode: 'two-player',
-              streak: player2.streak,
+              streak: player2BestStreak,
               roundsWon: player2.roundsWon
             })
           });
@@ -57,7 +59,7 @@ const ResultsScreen = ({
     };
 
     saveScores();
-  }, []);
+  }, [player1, player2, player1BestStreak, player2BestStreak, difficulty, gameMode]);
   if (gameMode === GAME_MODES.SOLO) {
     const rank = getRank(player1.score);
 
@@ -79,12 +81,14 @@ const ResultsScreen = ({
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-blue-100 rounded-xl p-4">
-              <p className="text-sm text-gray-600">Rondas completadas</p>
-              <p className="text-3xl font-black text-blue-600">{round - 1}</p>
+              <p className="text-sm text-gray-600">Rondas ganadas</p>
+              <p className="text-3xl font-black text-blue-600">{player1.roundsWon}</p>
             </div>
             <div className="bg-green-100 rounded-xl p-4">
               <p className="text-sm text-gray-600">Mejor racha</p>
-              <p className="text-3xl font-black text-green-600">{player1.streak}</p>
+              <p className="text-3xl font-black text-green-600">
+                {player1BestStreak > 0 ? `🔥 ${player1BestStreak}` : '0'}
+              </p>
             </div>
           </div>
 
@@ -134,21 +138,21 @@ const ResultsScreen = ({
         )}
 
         <div className="grid grid-cols-2 gap-6 mb-6">
-          <div className={`rounded-2xl p-6 ${player1.score > player2.score ? 'bg-gradient-to-br from-yellow-100 to-yellow-200 ring-4 ring-yellow-500' : 'bg-gray-100'}`}>
+          <div className={`rounded-2xl p-6 ${player1.score > player2.score ? 'bg-gradient-to-br from-yellow-100 to-yellow-200 ring-4 ring-yellow-500' : player1.score === player2.score ? 'bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-purple-300' : 'bg-gray-100'}`}>
             <p className="text-2xl font-black text-gray-800 mb-2">{player1.name}</p>
             <p className="text-5xl font-black text-purple-600 mb-2">{player1.score}</p>
             <div className="space-y-1 text-sm text-gray-600">
               <p>🎯 Rondas: {player1.roundsWon}</p>
-              <p>🔥 Racha: {player1.streak}</p>
+              <p>🔥 Mejor racha: {player1BestStreak}</p>
             </div>
           </div>
 
-          <div className={`rounded-2xl p-6 ${player2.score > player1.score ? 'bg-gradient-to-br from-yellow-100 to-yellow-200 ring-4 ring-yellow-500' : 'bg-gray-100'}`}>
+          <div className={`rounded-2xl p-6 ${player2.score > player1.score ? 'bg-gradient-to-br from-yellow-100 to-yellow-200 ring-4 ring-yellow-500' : player1.score === player2.score ? 'bg-gradient-to-br from-blue-100 to-purple-100 ring-2 ring-purple-300' : 'bg-gray-100'}`}>
             <p className="text-2xl font-black text-gray-800 mb-2">{player2.name}</p>
             <p className="text-5xl font-black text-pink-600 mb-2">{player2.score}</p>
             <div className="space-y-1 text-sm text-gray-600">
               <p>🎯 Rondas: {player2.roundsWon}</p>
-              <p>🔥 Racha: {player2.streak}</p>
+              <p>🔥 Mejor racha: {player2BestStreak}</p>
             </div>
           </div>
         </div>

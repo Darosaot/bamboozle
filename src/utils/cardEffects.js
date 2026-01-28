@@ -52,7 +52,7 @@ export const applySabotageEffect = (sabotage, currentPlayerScore, otherPlayerSco
       otherPlayerNewScore = currentPlayerScore;
       break;
     case "time":
-      timeReduction = 5;
+      timeReduction = sabotage.points || 5;
       break;
     case "bomb":
       otherPlayerNewScore = Math.max(0, otherPlayerScore - sabotage.points);
