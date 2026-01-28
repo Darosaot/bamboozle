@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import AdBanner from '../components/AdBanner';
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -268,6 +269,11 @@ export default function FAQ() {
                 Recursos Educativos →
               </Link>
             </div>
+          </div>
+
+          {/* Google AdSense Banner */}
+          <div className="mt-8">
+            <AdBanner slot="auto" format="auto" responsive={true} />
           </div>
         </div>
       </div>

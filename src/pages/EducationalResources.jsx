@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Baby, Heart, Moon, Utensils, Brain, Shield, AlertCircle, BookOpen } from 'lucide-react';
+import AdBanner from '../components/AdBanner';
 
 export default function EducationalResources() {
   const [activeCategory, setActiveCategory] = useState('embarazo');
@@ -622,6 +623,11 @@ export default function EducationalResources() {
                 </section>
               </div>
             )}
+          </div>
+
+          {/* Google AdSense Banner */}
+          <div className="mt-8">
+            <AdBanner slot="auto" format="auto" responsive={true} />
           </div>
         </div>
       </div>
