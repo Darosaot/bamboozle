@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Users, Clock, Heart, Zap, BookOpen } from 'lucide-react';
+import { User, Users, Clock, Heart, Zap } from 'lucide-react';
 import { GAME_MODES, DIFFICULTY_SETTINGS } from '../constants/gameConfig';
 import CategorySelector from './CategorySelector';
 
@@ -18,16 +18,14 @@ const PlayerSetup = ({
   onStartGame,
   onBack
 }) => {
-  const isPractice = gameMode === GAME_MODES.PRACTICE;
-  const isSoloOrPractice = gameMode === GAME_MODES.SOLO || isPractice;
-  const namesAreDifferent = isSoloOrPractice ||
+  const isSolo = gameMode === GAME_MODES.SOLO;
+  const namesAreDifferent = isSolo ||
     player1Name.trim().toLowerCase() !== player2Name.trim().toLowerCase();
   const canStart = player1Name.trim().length >= 2 &&
-    (isSoloOrPractice || player2Name.trim().length >= 2) &&
+    (isSolo || player2Name.trim().length >= 2) &&
     namesAreDifferent;
 
   const handleNameChange = (value, setter) => {
-    // Limit name length and remove leading/trailing spaces on each keystroke
     const trimmedValue = value.slice(0, MAX_NAME_LENGTH);
     setter(trimmedValue);
   };
@@ -48,22 +46,15 @@ const PlayerSetup = ({
     <div className="min-h-screen bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
         <div className="mb-6">
-          {isPractice ? (
-            <BookOpen className="w-20 h-20 mx-auto text-green-500" />
-          ) : gameMode === GAME_MODES.SOLO ? (
+          {isSolo ? (
             <User className="w-20 h-20 mx-auto text-blue-500" />
           ) : (
             <Users className="w-20 h-20 mx-auto text-pink-500" />
           )}
         </div>
         <h1 className="text-4xl font-black text-purple-600 mb-6 font-comic">
-          {isPractice ? 'MODO PRÁCTICA' : gameMode === GAME_MODES.SOLO ? 'MODO SOLO' : '2 JUGADORES'}
+          {isSolo ? 'MODO SOLO' : '2 JUGADORES'}
         </h1>
-        {isPractice && (
-          <p className="text-gray-600 mb-6 text-sm">
-            Sin tiempo limite ni vidas. Aprende a tu ritmo.
-          </p>
-        )}
 
         <div className="mb-4">
           <input
@@ -77,7 +68,7 @@ const PlayerSetup = ({
           <p className="text-xs text-gray-500 mt-1">{player1Name.length}/{MAX_NAME_LENGTH} caracteres</p>
         </div>
 
-        {gameMode === GAME_MODES.TWO_PLAYER && (
+        {!isSolo && (
           <div className="mb-4">
             <input
               type="text"
@@ -94,52 +85,49 @@ const PlayerSetup = ({
           </div>
         )}
 
-        {/* Difficulty selection - not shown in practice mode */}
-        {!isPractice && (
-          <div className="mb-6">
-            <p className="text-sm font-bold text-gray-700 mb-3">Dificultad:</p>
-            <div className="flex gap-2 mb-3">
-              {['easy', 'normal', 'hard'].map(diff => {
-                const info = getDifficultyInfo(diff);
-                return (
-                  <button
-                    key={diff}
-                    onClick={() => onDifficultyChange(diff)}
-                    className={`flex-1 py-3 rounded-lg font-bold transition-all ${
-                      difficulty === diff
-                        ? `${info.bgColor} text-white ring-2 ring-offset-2 ring-${diff === 'easy' ? 'green' : diff === 'normal' ? 'yellow' : 'red'}-400`
-                        : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                    }`}
-                  >
-                    <span className="text-xl">{diff === 'easy' ? '😊' : diff === 'normal' ? '😐' : '😰'}</span>
-                    <p className="text-xs mt-1">{info.name}</p>
-                  </button>
-                );
-              })}
-            </div>
+        <div className="mb-6">
+          <p className="text-sm font-bold text-gray-700 mb-3">Dificultad:</p>
+          <div className="flex gap-2 mb-3">
+            {['easy', 'normal', 'hard'].map(diff => {
+              const info = getDifficultyInfo(diff);
+              return (
+                <button
+                  key={diff}
+                  onClick={() => onDifficultyChange(diff)}
+                  className={`flex-1 py-3 rounded-lg font-bold transition-all ${
+                    difficulty === diff
+                      ? `${info.bgColor} text-white ring-2 ring-offset-2 ring-${diff === 'easy' ? 'green' : diff === 'normal' ? 'yellow' : 'red'}-400`
+                      : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                  }`}
+                >
+                  <span className="text-xl">{diff === 'easy' ? '😊' : diff === 'normal' ? '😐' : '😰'}</span>
+                  <p className="text-xs mt-1">{info.name}</p>
+                </button>
+              );
+            })}
+          </div>
 
-            {/* Difficulty info panel */}
-            <div className="bg-gray-100 rounded-xl p-4 text-left">
-              <p className={`font-black text-lg ${currentDiffInfo.color} mb-2`}>
-                {currentDiffInfo.name}
-              </p>
-              <div className="grid grid-cols-3 gap-2 text-sm">
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4 text-blue-500" />
-                  <span className="font-bold">{currentDiffInfo.time}s</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Heart className="w-4 h-4 text-red-500" />
-                  <span className="font-bold">{currentDiffInfo.lives} vidas</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Zap className="w-4 h-4 text-yellow-500" />
-                  <span className="font-bold">{currentDiffInfo.totalRounds} rondas</span>
-                </div>
+          {/* Difficulty info panel */}
+          <div className="bg-gray-100 rounded-xl p-4 text-left">
+            <p className={`font-black text-lg ${currentDiffInfo.color} mb-2`}>
+              {currentDiffInfo.name}
+            </p>
+            <div className="grid grid-cols-3 gap-2 text-sm">
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4 text-blue-500" />
+                <span className="font-bold">{currentDiffInfo.time}s</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Heart className="w-4 h-4 text-red-500" />
+                <span className="font-bold">{currentDiffInfo.lives} vidas</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Zap className="w-4 h-4 text-yellow-500" />
+                <span className="font-bold">{currentDiffInfo.totalRounds} rondas</span>
               </div>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Category Selector */}
         <CategorySelector
@@ -150,13 +138,9 @@ const PlayerSetup = ({
         <button
           onClick={onStartGame}
           disabled={!canStart}
-          className={`w-full text-white font-black text-xl py-4 rounded-xl transform hover:scale-105 transition-all shadow-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-            isPractice
-              ? 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600'
-              : 'bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600'
-          }`}
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white font-black text-xl py-4 rounded-xl hover:from-pink-600 hover:to-purple-600 transform hover:scale-105 transition-all shadow-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
-          {isPractice ? '¡PRACTICAR!' : '¡EMPEZAR!'}
+          ¡EMPEZAR!
         </button>
 
         <button

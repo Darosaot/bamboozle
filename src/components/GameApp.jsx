@@ -14,7 +14,7 @@ import { useTimer } from '../hooks/useTimer';
 import { useSounds } from '../hooks/useSounds';
 import { wangoCards } from '../data/wangoCards';
 import { sabotageCards } from '../data/sabotageCards';
-import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES, PRACTICE_SETTINGS } from '../constants/gameConfig';
+import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES } from '../constants/gameConfig';
 import { calculateScore } from '../utils/scoreCalculator';
 import { applyWangoEffect, applySabotageEffect } from '../utils/cardEffects';
 import { trackGameStart, trackGameEnd } from '../utils/analytics';
@@ -98,8 +98,7 @@ export default function GameApp() {
   };
 
   const handleStartGame = () => {
-    const isPractice = gameMode === GAME_MODES.PRACTICE;
-    const settings = isPractice ? PRACTICE_SETTINGS : DIFFICULTY_SETTINGS[difficulty];
+    const settings = DIFFICULTY_SETTINGS[difficulty];
     setGameStarted(true);
     setRound(1);
     setCurrentPlayer(1);
@@ -113,8 +112,8 @@ export default function GameApp() {
     setBestPositiveWangoStreak(0);
     setSabotageUsedCount(0);
 
-    // Apply daily streak bonus if not already applied (not in practice mode)
-    if (!isPractice && dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
+    // Apply daily streak bonus if not already applied
+    if (dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
       player1Hook.updateScore(dailyStreakData.bonusPoints);
       setDailyBonusApplied(true);
     }
@@ -132,13 +131,12 @@ export default function GameApp() {
     setCategories(selectedCategories);
     resetQuestions();
     loadNewQuestion();
-    // No timer in practice mode
-    setTimerActive(!isPractice);
+    setTimerActive(true);
 
     // Track game start in Google Analytics
     trackGameStart(
-      isPractice ? 'practice' : (gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player'),
-      isPractice ? 'practice' : difficulty
+      gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
+      difficulty
     );
   };
 
@@ -174,25 +172,19 @@ export default function GameApp() {
       }
     } else {
       sounds.playIncorrect();
-      const isPractice = gameMode === GAME_MODES.PRACTICE;
-
-      // In practice mode, no score penalty or lives lost
-      if (!isPractice) {
-        playerHook.updateScore(-50);
-        playerHook.updateLives(-1);
-
-        if (player.lives - 1 <= 0) {
-          sounds.playGameOver();
-          setTimeout(() => endGame(), 2000);
-          return;
-        }
-      }
+      playerHook.updateScore(-50);
+      playerHook.updateLives(-1);
       playerHook.updateStreak(false);
+
+      if (player.lives - 1 <= 0) {
+        sounds.playGameOver();
+        setTimeout(() => endGame(), 2000);
+        return;
+      }
     }
 
-    // Card probability - trigger card if random is less than the probability (not in practice mode)
-    const isPracticeMode = gameMode === GAME_MODES.PRACTICE;
-    if (!isPracticeMode && Math.random() < CARD_PROBABILITIES.WANGO_BASE) {
+    // Card probability - trigger card if random is less than the probability
+    if (Math.random() < CARD_PROBABILITIES.WANGO_BASE) {
       setTimeout(() => {
         if (gameMode === GAME_MODES.TWO_PLAYER && Math.random() < CARD_PROBABILITIES.SABOTAGE_IN_WANGO) {
           const randomSabotage = sabotageCards[Math.floor(Math.random() * sabotageCards.length)];
@@ -350,8 +342,7 @@ export default function GameApp() {
 
     // Check achievements for player 1 (or winner in solo mode)
     const dailyStreak = getDailyStreakData();
-    const isPractice = gameMode === GAME_MODES.PRACTICE;
-    const achievementsEarned = isPractice ? [] : checkAchievements({
+    const achievementsEarned = checkAchievements({
       score: player1Score,
       bestStreak: player1BestStreak,
       livesRemaining: player1Hook.player.lives,
@@ -379,8 +370,7 @@ export default function GameApp() {
       isWinner: isPlayer1Winner,
       gameMode: isTwoPlayer ? 'two-player' : 'solo',
       difficulty,
-      durationSeconds,
-      isPractice
+      durationSeconds
     });
   };
 
@@ -525,8 +515,7 @@ export default function GameApp() {
     );
   }
 
-  const isPracticeMode = gameMode === GAME_MODES.PRACTICE;
-  const settings = isPracticeMode ? PRACTICE_SETTINGS : DIFFICULTY_SETTINGS[difficulty];
+  const settings = DIFFICULTY_SETTINGS[difficulty];
 
   return (
     <GameScreen
@@ -548,7 +537,6 @@ export default function GameApp() {
       onUseFiftyFifty={useFiftyFifty}
       onUseTimeFreeze={useTimeFreeze}
       onUseSkip={useSkip}
-      onQuit={isPracticeMode ? () => setShowResults(true) : undefined}
     />
   );
 }

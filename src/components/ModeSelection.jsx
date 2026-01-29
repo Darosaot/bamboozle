@@ -1,5 +1,5 @@
 import React from 'react';
-import { Baby, User, Users, Volume2, VolumeX, Trophy, Award, Flame, Calendar, BookOpen, BarChart3 } from 'lucide-react';
+import { Baby, User, Users, Volume2, VolumeX, Trophy, Award, Flame, BarChart3 } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
 import DailyChallengeCard from './DailyChallengeCard';
@@ -57,18 +57,6 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
             <p className="text-sm">Compite con un amigo</p>
           </button>
         </div>
-
-        {/* Practice Mode Button */}
-        <button
-          onClick={() => onSelectMode(GAME_MODES.PRACTICE)}
-          className="w-full bg-gradient-to-r from-green-400 to-teal-400 text-white p-4 rounded-xl hover:from-green-500 hover:to-teal-500 transform hover:scale-105 transition-all shadow-lg mb-6 flex items-center justify-center gap-3"
-        >
-          <BookOpen className="w-8 h-8" />
-          <div className="text-left">
-            <h3 className="text-xl font-black">MODO PRÁCTICA</h3>
-            <p className="text-sm opacity-90">Sin tiempo ni vidas - aprende a tu ritmo</p>
-          </div>
-        </button>
 
         {/* Daily Challenge Card */}
         <div className="my-6">
