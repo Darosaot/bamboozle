@@ -1,12 +1,12 @@
 import React from 'react';
-import { Baby, User, Users, Volume2, VolumeX, Trophy, Award, Flame, Calendar } from 'lucide-react';
+import { Baby, User, Users, Volume2, VolumeX, Trophy, Award, Flame, Calendar, BookOpen, BarChart3 } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
 import DailyChallengeCard from './DailyChallengeCard';
 import { getDailyStreakData } from '../utils/dailyStreak';
 import { getAchievementProgress } from '../utils/achievements';
 
-const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, soundEnabled, onToggleSound }) => {
+const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, onViewStats, soundEnabled, onToggleSound }) => {
   const dailyStreak = getDailyStreakData();
   const achievementProgress = getAchievementProgress();
 
@@ -58,6 +58,18 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, so
           </button>
         </div>
 
+        {/* Practice Mode Button */}
+        <button
+          onClick={() => onSelectMode(GAME_MODES.PRACTICE)}
+          className="w-full bg-gradient-to-r from-green-400 to-teal-400 text-white p-4 rounded-xl hover:from-green-500 hover:to-teal-500 transform hover:scale-105 transition-all shadow-lg mb-6 flex items-center justify-center gap-3"
+        >
+          <BookOpen className="w-8 h-8" />
+          <div className="text-left">
+            <h3 className="text-xl font-black">MODO PRÁCTICA</h3>
+            <p className="text-sm opacity-90">Sin tiempo ni vidas - aprende a tu ritmo</p>
+          </div>
+        </button>
+
         {/* Daily Challenge Card */}
         <div className="my-6">
           <DailyChallengeCard onStartChallenge={(challenge) => {
@@ -89,6 +101,14 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, so
             )}
           </button>
         </div>
+
+        <button
+          onClick={onViewStats}
+          className="w-full bg-gradient-to-r from-indigo-400 to-blue-400 text-white font-black py-3 rounded-lg hover:from-indigo-500 hover:to-blue-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 mb-3"
+        >
+          <BarChart3 size={20} />
+          MIS ESTADÍSTICAS
+        </button>
 
         <button
           onClick={onToggleSound}

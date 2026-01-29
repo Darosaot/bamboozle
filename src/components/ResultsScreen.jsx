@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy } from 'lucide-react';
+import { Trophy, BookOpen } from 'lucide-react';
 import { getRank } from '../utils/scoreCalculator';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
@@ -17,9 +17,15 @@ const ResultsScreen = ({
   onPlayAgain
 }) => {
   const [saved, setSaved] = useState(false);
+  const isPractice = gameMode === GAME_MODES.PRACTICE;
 
-  // Auto-save scores when component mounts
+  // Auto-save scores when component mounts (not in practice mode)
   useEffect(() => {
+    if (isPractice) {
+      setSaved(true); // Mark as "saved" to avoid showing loading state
+      return;
+    }
+
     const saveScores = async () => {
       try {
         // Save player 1 score (use best streak instead of current)
@@ -59,7 +65,64 @@ const ResultsScreen = ({
     };
 
     saveScores();
-  }, [player1, player2, player1BestStreak, player2BestStreak, difficulty, gameMode]);
+  }, [player1, player2, player1BestStreak, player2BestStreak, difficulty, gameMode, isPractice]);
+
+  // Practice mode results screen
+  if (isPractice) {
+    const totalQuestions = round;
+    const correctAnswers = player1.roundsWon;
+    const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-400 via-teal-400 to-cyan-400 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+          <BookOpen className="w-24 h-24 mx-auto text-green-500 mb-4" />
+          <h2 className="text-4xl font-black mb-2 font-comic text-green-700">
+            ¡PRÁCTICA COMPLETADA!
+          </h2>
+          <p className="text-gray-600 mb-6">Bien hecho, {player1.name}</p>
+
+          <div className="bg-gradient-to-r from-green-100 to-teal-100 rounded-2xl p-6 mb-6">
+            <p className="text-gray-600 mb-2">Precisión</p>
+            <p className="text-6xl font-black text-green-600">{accuracy}%</p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="bg-blue-100 rounded-xl p-4">
+              <p className="text-xs text-gray-600">Preguntas</p>
+              <p className="text-2xl font-black text-blue-600">{totalQuestions}</p>
+            </div>
+            <div className="bg-green-100 rounded-xl p-4">
+              <p className="text-xs text-gray-600">Correctas</p>
+              <p className="text-2xl font-black text-green-600">{correctAnswers}</p>
+            </div>
+            <div className="bg-orange-100 rounded-xl p-4">
+              <p className="text-xs text-gray-600">Mejor racha</p>
+              <p className="text-2xl font-black text-orange-600">{player1BestStreak}</p>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 mb-6">
+            <p className="text-sm text-yellow-800">
+              💡 <strong>Modo práctica</strong> - Las puntuaciones no se guardan en la clasificación.
+              ¡Juega en modo Solo o 2 Jugadores para competir!
+            </p>
+          </div>
+
+          <button
+            onClick={onPlayAgain}
+            className="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-teal-600 transform hover:scale-105 transition-all shadow-lg"
+          >
+            VOLVER AL MENÚ
+          </button>
+
+          {/* Google AdSense Banner */}
+          <AdBanner />
+        </div>
+      </div>
+    );
+  }
+
   if (gameMode === GAME_MODES.SOLO) {
     const rank = getRank(player1.score);
 

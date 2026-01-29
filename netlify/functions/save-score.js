@@ -45,13 +45,40 @@ export default async (req, context) => {
       });
     }
 
-    // Connect to database
-    const sql = neon(process.env.NETLIFY_DATABASE_URL);
+    // Validate score range (anti-cheat)
+    const maxScoresByDifficulty = {
+      easy: 15000,    // 8 rounds max, generous limit
+      normal: 20000,  // 10 rounds max
+      hard: 30000     // 12 rounds max
+    };
 
-    // Insert score into database
+    if (score < 0 || score > maxScoresByDifficulty[difficulty]) {
+      return new Response(JSON.stringify({
+        error: 'Invalid score value'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validate player name (2-15 chars, no special injection chars)
+    const sanitizedName = playerName.trim().substring(0, 15);
+    if (sanitizedName.length < 2 || /[<>\"';&]/.test(sanitizedName)) {
+      return new Response(JSON.stringify({
+        error: 'Invalid player name'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Connect to database
+    const sql = neon(process.env.DATABASE_URL);
+
+    // Insert score into database (use sanitized name)
     const result = await sql`
       INSERT INTO scores (player_name, score, difficulty, game_mode, streak, rounds_won)
-      VALUES (${playerName}, ${score}, ${difficulty}, ${gameMode}, ${streak || 0}, ${roundsWon || 0})
+      VALUES (${sanitizedName}, ${score}, ${difficulty}, ${gameMode}, ${streak || 0}, ${roundsWon || 0})
       RETURNING id, player_name, score, difficulty, game_mode, streak, rounds_won, created_at
     `;
 

@@ -6,7 +6,14 @@ export const DIFFICULTY_SETTINGS = {
 
 export const GAME_MODES = {
   SOLO: 'solo',
-  TWO_PLAYER: '2player'
+  TWO_PLAYER: '2player',
+  PRACTICE: 'practice'
+};
+
+export const PRACTICE_SETTINGS = {
+  time: 999,
+  totalRounds: 999,
+  lives: 999
 };
 
 export const INITIAL_PLAYER_STATE = {

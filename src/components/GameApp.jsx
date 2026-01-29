@@ -5,19 +5,22 @@ import GameScreen from './GameScreen';
 import ResultsScreen from './ResultsScreen';
 import Leaderboard from './Leaderboard';
 import AchievementsPage from './AchievementsPage';
+import PlayerStatsPage from './PlayerStatsPage';
 import DailyStreakBanner from './DailyStreakBanner';
 import AchievementPopup from './AchievementPopup';
 import { usePlayer } from '../hooks/usePlayer';
 import { useQuestions } from '../hooks/useQuestions';
 import { useTimer } from '../hooks/useTimer';
+import { useSounds } from '../hooks/useSounds';
 import { wangoCards } from '../data/wangoCards';
 import { sabotageCards } from '../data/sabotageCards';
-import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES } from '../constants/gameConfig';
+import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES, PRACTICE_SETTINGS } from '../constants/gameConfig';
 import { calculateScore } from '../utils/scoreCalculator';
 import { applyWangoEffect, applySabotageEffect } from '../utils/cardEffects';
 import { trackGameStart, trackGameEnd } from '../utils/analytics';
 import { checkAndUpdateDailyStreak, getDailyStreakData } from '../utils/dailyStreak';
 import { checkAchievements } from '../utils/achievements';
+import { updateStatsAfterGame } from '../utils/playerStats';
 
 export default function GameApp() {
   // Game state
@@ -28,6 +31,7 @@ export default function GameApp() {
   const [showResults, setShowResults] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showStats, setShowStats] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [round, setRound] = useState(1);
   const [gameStartTime, setGameStartTime] = useState(null);
@@ -50,6 +54,14 @@ export default function GameApp() {
   const [player1BestStreak, setPlayer1BestStreak] = useState(0);
   const [player2BestStreak, setPlayer2BestStreak] = useState(0);
 
+  // Achievement tracking for Wango and Sabotage
+  const [positiveWangoStreak, setPositiveWangoStreak] = useState(0);
+  const [bestPositiveWangoStreak, setBestPositiveWangoStreak] = useState(0);
+  const [sabotageUsedCount, setSabotageUsedCount] = useState(0);
+
+  // Category selection
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   // Check daily streak on app load
   useEffect(() => {
     const streakData = checkAndUpdateDailyStreak();
@@ -62,7 +74,8 @@ export default function GameApp() {
   // Custom hooks
   const player1Hook = usePlayer();
   const player2Hook = usePlayer();
-  const { currentQuestion, loadNewQuestion, resetQuestions } = useQuestions();
+  const { currentQuestion, loadNewQuestion, resetQuestions, setCategories } = useQuestions();
+  const sounds = useSounds(soundEnabled);
 
   // Timer hook
   useTimer(
@@ -85,7 +98,8 @@ export default function GameApp() {
   };
 
   const handleStartGame = () => {
-    const settings = DIFFICULTY_SETTINGS[difficulty];
+    const isPractice = gameMode === GAME_MODES.PRACTICE;
+    const settings = isPractice ? PRACTICE_SETTINGS : DIFFICULTY_SETTINGS[difficulty];
     setGameStarted(true);
     setRound(1);
     setCurrentPlayer(1);
@@ -94,8 +108,13 @@ export default function GameApp() {
     player1Hook.resetPlayer(settings.lives, settings.time);
     setPlayer1BestStreak(0);
 
-    // Apply daily streak bonus if not already applied
-    if (dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
+    // Reset achievement tracking
+    setPositiveWangoStreak(0);
+    setBestPositiveWangoStreak(0);
+    setSabotageUsedCount(0);
+
+    // Apply daily streak bonus if not already applied (not in practice mode)
+    if (!isPractice && dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
       player1Hook.updateScore(dailyStreakData.bonusPoints);
       setDailyBonusApplied(true);
     }
@@ -109,14 +128,17 @@ export default function GameApp() {
       }
     }
 
+    // Set categories filter for questions
+    setCategories(selectedCategories);
     resetQuestions();
     loadNewQuestion();
-    setTimerActive(true);
+    // No timer in practice mode
+    setTimerActive(!isPractice);
 
     // Track game start in Google Analytics
     trackGameStart(
-      gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
-      difficulty
+      isPractice ? 'practice' : (gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player'),
+      isPractice ? 'practice' : difficulty
     );
   };
 
@@ -137,6 +159,13 @@ export default function GameApp() {
       const bonus = calculateScore(currentQuestion.points, player.timeLeft, newStreak);
       playerHook.updateScore(bonus);
 
+      // Play sound based on streak
+      if (newStreak >= 3) {
+        sounds.playStreak(newStreak);
+      } else {
+        sounds.playCorrect();
+      }
+
       // Update best streak
       if (currentPlayer === 1) {
         setPlayer1BestStreak(prev => Math.max(prev, newStreak));
@@ -144,18 +173,26 @@ export default function GameApp() {
         setPlayer2BestStreak(prev => Math.max(prev, newStreak));
       }
     } else {
-      playerHook.updateScore(-50);
-      playerHook.updateStreak(false);
-      playerHook.updateLives(-1);
+      sounds.playIncorrect();
+      const isPractice = gameMode === GAME_MODES.PRACTICE;
 
-      if (player.lives - 1 <= 0) {
-        setTimeout(() => endGame(), 2000);
-        return;
+      // In practice mode, no score penalty or lives lost
+      if (!isPractice) {
+        playerHook.updateScore(-50);
+        playerHook.updateLives(-1);
+
+        if (player.lives - 1 <= 0) {
+          sounds.playGameOver();
+          setTimeout(() => endGame(), 2000);
+          return;
+        }
       }
+      playerHook.updateStreak(false);
     }
 
-    // Card probability - trigger card if random is less than the probability
-    if (Math.random() < CARD_PROBABILITIES.WANGO_BASE) {
+    // Card probability - trigger card if random is less than the probability (not in practice mode)
+    const isPracticeMode = gameMode === GAME_MODES.PRACTICE;
+    if (!isPracticeMode && Math.random() < CARD_PROBABILITIES.WANGO_BASE) {
       setTimeout(() => {
         if (gameMode === GAME_MODES.TWO_PLAYER && Math.random() < CARD_PROBABILITIES.SABOTAGE_IN_WANGO) {
           const randomSabotage = sabotageCards[Math.floor(Math.random() * sabotageCards.length)];
@@ -208,6 +245,17 @@ export default function GameApp() {
       playerHook.updateLives(result.livesChange);
     }
 
+    // Track positive Wango streak for achievements and play sound
+    if (result.isPositive) {
+      sounds.playWangoPositive();
+      const newStreak = positiveWangoStreak + 1;
+      setPositiveWangoStreak(newStreak);
+      setBestPositiveWangoStreak(prev => Math.max(prev, newStreak));
+    } else {
+      sounds.playWangoNegative();
+      setPositiveWangoStreak(0);
+    }
+
     setTimeout(() => {
       nextTurn();
     }, 2000);
@@ -229,6 +277,10 @@ export default function GameApp() {
     if (result.timeReduction > 0) {
       otherPlayerHook.updateTimeLeft(Math.max(0, otherPlayerHook.player.timeLeft - result.timeReduction));
     }
+
+    // Track sabotage usage for achievements
+    sounds.playSabotage();
+    setSabotageUsedCount(prev => prev + 1);
 
     setTimeout(() => {
       nextTurn();
@@ -276,6 +328,11 @@ export default function GameApp() {
     const player2Score = player2Hook.player.score;
     const isPlayer1Winner = !isTwoPlayer || player1Score >= player2Score;
 
+    // Play victory sound if player has lives remaining
+    if (player1Hook.player.lives > 0) {
+      sounds.playVictory();
+    }
+
     // Track game end in Google Analytics
     if (gameStartTime) {
       const duration = Math.floor((Date.now() - gameStartTime) / 1000);
@@ -293,7 +350,8 @@ export default function GameApp() {
 
     // Check achievements for player 1 (or winner in solo mode)
     const dailyStreak = getDailyStreakData();
-    const achievementsEarned = checkAchievements({
+    const isPractice = gameMode === GAME_MODES.PRACTICE;
+    const achievementsEarned = isPractice ? [] : checkAchievements({
       score: player1Score,
       bestStreak: player1BestStreak,
       livesRemaining: player1Hook.player.lives,
@@ -302,12 +360,28 @@ export default function GameApp() {
       dailyStreak: dailyStreak.currentStreak,
       timeLeft: player1Hook.player.timeLeft,
       isWinner: isPlayer1Winner,
-      isTwoPlayer
+      isTwoPlayer,
+      positiveWangoStreak: bestPositiveWangoStreak,
+      sabotageUsed: sabotageUsedCount
     });
 
     if (achievementsEarned.length > 0) {
       setNewAchievements(achievementsEarned);
     }
+
+    // Update player statistics
+    const durationSeconds = gameStartTime ? Math.floor((Date.now() - gameStartTime) / 1000) : 0;
+    updateStatsAfterGame({
+      score: player1Score,
+      streak: player1BestStreak,
+      correctAnswers: player1Hook.player.roundsWon,
+      totalQuestions: round,
+      isWinner: isPlayer1Winner,
+      gameMode: isTwoPlayer ? 'two-player' : 'solo',
+      difficulty,
+      durationSeconds,
+      isPractice
+    });
   };
 
   const resetGame = () => {
@@ -316,6 +390,7 @@ export default function GameApp() {
     setShowResults(false);
     setShowLeaderboard(false);
     setShowAchievements(false);
+    setShowStats(false);
     setCurrentPlayer(1);
     setRound(1);
     setAnsweredCorrectly(null);
@@ -324,6 +399,9 @@ export default function GameApp() {
     setRemovedOptions([]);
     setTimerActive(false);
     setNewAchievements([]);
+    setPositiveWangoStreak(0);
+    setBestPositiveWangoStreak(0);
+    setSabotageUsedCount(0);
     resetQuestions();
   };
 
@@ -332,6 +410,7 @@ export default function GameApp() {
     const player = playerHook.player;
 
     if (player.powerUps.fiftyFifty > 0 && removedOptions.length === 0 && currentQuestion) {
+      sounds.playPowerUp();
       const wrongOptions = currentQuestion.options
         .map((opt, idx) => idx)
         .filter(idx => idx !== currentQuestion.correct);
@@ -346,6 +425,7 @@ export default function GameApp() {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
 
     if (playerHook.player.powerUps.skip > 0) {
+      sounds.playPowerUp();
       playerHook.usePowerUp('skip');
       nextTurn();
     }
@@ -355,6 +435,7 @@ export default function GameApp() {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
 
     if (playerHook.player.powerUps.timeFreeze > 0) {
+      sounds.playPowerUp();
       setTimerActive(false);
       setTimeFrozen(true);
       playerHook.usePowerUp('timeFreeze');
@@ -378,6 +459,12 @@ export default function GameApp() {
     );
   }
 
+  if (showStats) {
+    return (
+      <PlayerStatsPage onBack={() => setShowStats(false)} />
+    );
+  }
+
   if (!gameMode) {
     return (
       <>
@@ -385,6 +472,7 @@ export default function GameApp() {
           onSelectMode={handleSelectMode}
           onViewLeaderboard={() => setShowLeaderboard(true)}
           onViewAchievements={() => setShowAchievements(true)}
+          onViewStats={() => setShowStats(true)}
           soundEnabled={soundEnabled}
           onToggleSound={() => setSoundEnabled(!soundEnabled)}
         />
@@ -407,6 +495,8 @@ export default function GameApp() {
         onPlayer2NameChange={player2Hook.updatePlayerName}
         difficulty={difficulty}
         onDifficultyChange={setDifficulty}
+        selectedCategories={selectedCategories}
+        onCategoriesChange={setSelectedCategories}
         onStartGame={handleStartGame}
         onBack={() => setGameMode(null)}
       />
@@ -435,7 +525,8 @@ export default function GameApp() {
     );
   }
 
-  const settings = DIFFICULTY_SETTINGS[difficulty];
+  const isPracticeMode = gameMode === GAME_MODES.PRACTICE;
+  const settings = isPracticeMode ? PRACTICE_SETTINGS : DIFFICULTY_SETTINGS[difficulty];
 
   return (
     <GameScreen
@@ -457,6 +548,7 @@ export default function GameApp() {
       onUseFiftyFifty={useFiftyFifty}
       onUseTimeFreeze={useTimeFreeze}
       onUseSkip={useSkip}
+      onQuit={isPracticeMode ? () => setShowResults(true) : undefined}
     />
   );
 }
