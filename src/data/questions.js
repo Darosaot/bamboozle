@@ -198,5 +198,65 @@ export const questions = [
   { q: "¿Qué es la hidrocefalia?", options: ["Falta de líquido", "Acumulación de líquido en el cerebro", "Cerebro pequeño", "Cerebro grande"], correct: 1, points: 300, difficulty: 'hard' },
   { q: "¿Qué es la microcefalia?", options: ["Cabeza normal", "Cabeza pequeña", "Cabeza grande", "Cabeza deformada"], correct: 1, points: 250, difficulty: 'hard' },
   { q: "¿Qué es la macrocefalia?", options: ["Cabeza normal", "Cabeza pequeña", "Cabeza grande", "Cabeza deformada"], correct: 2, points: 250, difficulty: 'hard' },
-  { q: "¿Qué es la atresia biliar?", options: ["Problema vesicular", "Obstrucción de vías biliares", "Problema hepático", "Problema pancreático"], correct: 1, points: 300, difficulty: 'hard' }
+  { q: "¿Qué es la atresia biliar?", options: ["Problema vesicular", "Obstrucción de vías biliares", "Problema hepático", "Problema pancreático"], correct: 1, points: 300, difficulty: 'hard' },
+
+  // Nuevas Preguntas - Embarazo
+  { q: "¿En qué semana se forma el corazón del bebé?", options: ["Semana 3-4", "Semana 6-7", "Semana 10-11", "Semana 14-15"], correct: 0, points: 200, difficulty: 'normal', category: 'embarazo' },
+  { q: "¿Qué es el tapón mucoso?", options: ["Un anticonceptivo", "Protección del cuello uterino", "Un problema", "Un medicamento"], correct: 1, points: 150, difficulty: 'normal', category: 'embarazo' },
+  { q: "¿Cuánto peso se recomienda ganar durante el embarazo?", options: ["5-8 kg", "9-12 kg", "11-16 kg", "20-25 kg"], correct: 2, points: 150, difficulty: 'normal', category: 'embarazo' },
+  { q: "¿Qué es la preeclampsia?", options: ["Anemia", "Hipertensión en el embarazo", "Diabetes gestacional", "Ansiedad"], correct: 1, points: 200, difficulty: 'hard', category: 'embarazo' },
+  { q: "¿Cuándo se puede conocer el sexo del bebé?", options: ["Semana 8", "Semana 12", "Semana 16-20", "Semana 28"], correct: 2, points: 100, difficulty: 'easy', category: 'embarazo' },
+  { q: "¿Qué es la diabetes gestacional?", options: ["Diabetes permanente", "Diabetes solo durante embarazo", "Hipoglucemia", "Hipertiroidismo"], correct: 1, points: 150, difficulty: 'normal', category: 'embarazo' },
+  { q: "¿Qué es la placenta previa?", options: ["Placenta en posición normal", "Placenta que cubre el cuello uterino", "Placenta pequeña", "Placenta grande"], correct: 1, points: 200, difficulty: 'hard', category: 'embarazo' },
+  { q: "¿Cuántas ecografías se hacen normalmente en el embarazo?", options: ["1", "2", "3", "5 o más"], correct: 2, points: 100, difficulty: 'easy', category: 'embarazo' },
+  { q: "¿Qué es el oligohidramnios?", options: ["Exceso de líquido amniótico", "Poco líquido amniótico", "Líquido normal", "Sin líquido"], correct: 1, points: 250, difficulty: 'hard', category: 'embarazo' },
+  { q: "¿Qué es el polihidramnios?", options: ["Poco líquido amniótico", "Exceso de líquido amniótico", "Líquido normal", "Sin líquido"], correct: 1, points: 250, difficulty: 'hard', category: 'embarazo' },
+
+  // Nuevas Preguntas - Nutrición
+  { q: "¿Cuándo pueden los bebés comer frutos secos enteros?", options: ["12 meses", "2 años", "3 años", "4-5 años"], correct: 3, points: 150, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Qué alimentos pueden causar atragantamiento?", options: ["Puré", "Uvas enteras", "Plátano", "Pan"], correct: 1, points: 150, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Cuánta leche necesita un bebé de 12 meses?", options: ["200 ml", "400-500 ml", "700-800 ml", "1 litro"], correct: 1, points: 150, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Qué es una alergia alimentaria?", options: ["Intolerancia", "Reacción inmune a alimentos", "Rechazo por sabor", "Vómitos"], correct: 1, points: 200, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Cuál es el alérgeno alimentario más común en bebés?", options: ["Gluten", "Leche de vaca", "Huevo", "Pescado"], correct: 1, points: 200, difficulty: 'hard', category: 'nutricion' },
+  { q: "¿Qué es la intolerancia a la lactosa?", options: ["Alergia a la leche", "No digerir lactosa", "Alergia a la proteína", "Vómitos"], correct: 1, points: 150, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Cuándo introducir gluten en la dieta del bebé?", options: ["4 meses", "6 meses", "9 meses", "12 meses"], correct: 1, points: 150, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Qué vitamina necesitan los bebés amamantados?", options: ["Vitamina A", "Vitamina C", "Vitamina D", "Vitamina E"], correct: 2, points: 200, difficulty: 'normal', category: 'nutricion' },
+  { q: "¿Cuántas calorías necesita un bebé de 6 meses al día?", options: ["400-500", "600-700", "800-900", "1000-1100"], correct: 1, points: 200, difficulty: 'hard', category: 'nutricion' },
+  { q: "¿Qué es el hierro hemo?", options: ["Hierro vegetal", "Hierro de origen animal", "Suplemento", "Vitamina"], correct: 1, points: 200, difficulty: 'hard', category: 'nutricion' },
+
+  // Nuevas Preguntas - Desarrollo
+  { q: "¿Qué es el reflejo de marcha automática?", options: ["Gatear", "Movimiento de caminar al sostenerlo", "Correr", "Saltar"], correct: 1, points: 200, difficulty: 'normal', category: 'desarrollo' },
+  { q: "¿A qué edad desaparece el reflejo de Moro?", options: ["1 mes", "2-3 meses", "4-6 meses", "9-12 meses"], correct: 2, points: 200, difficulty: 'hard', category: 'desarrollo' },
+  { q: "¿Qué es el desarrollo cognitivo?", options: ["Desarrollo físico", "Desarrollo del pensamiento", "Desarrollo emocional", "Desarrollo motor"], correct: 1, points: 150, difficulty: 'normal', category: 'desarrollo' },
+  { q: "¿A qué edad imitan los bebés sonidos?", options: ["2-3 meses", "4-6 meses", "7-9 meses", "10-12 meses"], correct: 1, points: 150, difficulty: 'normal', category: 'desarrollo' },
+  { q: "¿Qué es la lateralidad?", options: ["Ser diestro o zurdo", "Caminar recto", "Equilibrio", "Coordinación"], correct: 0, points: 150, difficulty: 'normal', category: 'desarrollo' },
+  { q: "¿A qué edad se define la lateralidad?", options: ["1 año", "2 años", "3-4 años", "5-6 años"], correct: 2, points: 200, difficulty: 'hard', category: 'desarrollo' },
+  { q: "¿Qué porcentaje de bebés son zurdos?", options: ["5%", "10%", "15%", "25%"], correct: 1, points: 200, difficulty: 'hard', category: 'desarrollo' },
+  { q: "¿Qué es el periodo sensoriomotor?", options: ["0-2 años según Piaget", "2-7 años", "7-11 años", "Adolescencia"], correct: 0, points: 250, difficulty: 'hard', category: 'desarrollo' },
+  { q: "¿Cuántas palabras conoce un niño de 2 años?", options: ["50-100", "200-300", "500-600", "1000+"], correct: 1, points: 150, difficulty: 'normal', category: 'desarrollo' },
+  { q: "¿A qué edad los niños entienden el concepto de 'mío'?", options: ["12 meses", "18 meses", "24 meses", "36 meses"], correct: 1, points: 150, difficulty: 'normal', category: 'desarrollo' },
+
+  // Nuevas Preguntas - Salud
+  { q: "¿Cuántas vacunas recibe un bebé en el primer año?", options: ["3-4", "6-8", "10-12", "15+"], correct: 2, points: 150, difficulty: 'normal', category: 'salud' },
+  { q: "¿Qué es la bronquiolitis?", options: ["Infección de garganta", "Infección de bronquios pequeños", "Gripe", "Resfriado"], correct: 1, points: 200, difficulty: 'hard', category: 'salud' },
+  { q: "¿Qué es el crup?", options: ["Tos perruna", "Tos seca", "Tos con flema", "Sin tos"], correct: 0, points: 200, difficulty: 'normal', category: 'salud' },
+  { q: "¿A partir de qué temperatura es fiebre en bebés?", options: ["36.5°C", "37°C", "37.5°C", "38°C"], correct: 3, points: 150, difficulty: 'normal', category: 'salud' },
+  { q: "¿Qué es la dermatitis del pañal?", options: ["Alergia", "Irritación por humedad", "Infección", "Quemadura"], correct: 1, points: 100, difficulty: 'easy', category: 'salud' },
+  { q: "¿Qué es el muguet oral?", options: ["Úlceras", "Hongos en la boca", "Herpes", "Alergias"], correct: 1, points: 200, difficulty: 'normal', category: 'salud' },
+  { q: "¿Qué causa los cólicos del lactante?", options: ["Hambre", "Causa desconocida", "Frío", "Sueño"], correct: 1, points: 150, difficulty: 'normal', category: 'salud' },
+  { q: "¿Hasta qué edad duran normalmente los cólicos?", options: ["1 mes", "2 meses", "3-4 meses", "6 meses"], correct: 2, points: 150, difficulty: 'normal', category: 'salud' },
+  { q: "¿Qué es la otitis media?", options: ["Infección de nariz", "Infección de oído medio", "Infección de garganta", "Infección de ojo"], correct: 1, points: 150, difficulty: 'normal', category: 'salud' },
+  { q: "¿Cuándo se debe llamar al médico por fiebre en un recién nacido?", options: ["37.5°C", "38°C", "38.5°C", "Cualquier fiebre"], correct: 3, points: 200, difficulty: 'hard', category: 'salud' },
+
+  // Nuevas Preguntas - Sueño
+  { q: "¿Qué es la higiene del sueño?", options: ["Bañar al bebé", "Rutinas para dormir bien", "Lavar la cuna", "Cambiar pañal"], correct: 1, points: 150, difficulty: 'normal', category: 'sueno' },
+  { q: "¿Cuántos ciclos de sueño completa un adulto por noche?", options: ["2-3", "4-5", "6-7", "8-9"], correct: 1, points: 150, difficulty: 'normal', category: 'sueno' },
+  { q: "¿Qué es el método Ferber?", options: ["Colecho", "Extinción gradual del llanto", "Lactancia nocturna", "Porteo"], correct: 1, points: 200, difficulty: 'hard', category: 'sueno' },
+  { q: "¿Qué es la ventana de sueño?", options: ["Ventana abierta", "Momento óptimo para dormir", "Horas de siesta", "Luz natural"], correct: 1, points: 150, difficulty: 'normal', category: 'sueno' },
+  { q: "¿Cuánto dura un ciclo de sueño en bebés?", options: ["20-30 min", "40-50 min", "60-90 min", "2 horas"], correct: 1, points: 200, difficulty: 'hard', category: 'sueno' },
+  { q: "¿Qué hormona regula el sueño?", options: ["Cortisol", "Melatonina", "Adrenalina", "Insulina"], correct: 1, points: 150, difficulty: 'normal', category: 'sueno' },
+  { q: "¿A qué edad los bebés producen melatonina?", options: ["Al nacer", "1 mes", "3-4 meses", "6 meses"], correct: 2, points: 200, difficulty: 'hard', category: 'sueno' },
+  { q: "¿Qué es un terror nocturno?", options: ["Pesadilla", "Despertar parcial con llanto", "Insomnio", "Sonambulismo"], correct: 1, points: 200, difficulty: 'hard', category: 'sueno' },
+  { q: "¿A qué edad pueden aparecer los terrores nocturnos?", options: ["6 meses", "12 meses", "18 meses - 3 años", "5-6 años"], correct: 2, points: 200, difficulty: 'hard', category: 'sueno' },
+  { q: "¿Cuántas horas debe dormir un niño de 3 años?", options: ["8-9 horas", "10-11 horas", "11-13 horas", "14-15 horas"], correct: 2, points: 150, difficulty: 'normal', category: 'sueno' }
 ];
