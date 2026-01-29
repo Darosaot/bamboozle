@@ -1,9 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import ModeSelection from './ModeSelection';
 import PlayerSetup from './PlayerSetup';
 import GameScreen from './GameScreen';
 import ResultsScreen from './ResultsScreen';
 import Leaderboard from './Leaderboard';
+import AchievementsPage from './AchievementsPage';
+import DailyStreakBanner from './DailyStreakBanner';
+import AchievementPopup from './AchievementPopup';
 import { usePlayer } from '../hooks/usePlayer';
 import { useQuestions } from '../hooks/useQuestions';
 import { useTimer } from '../hooks/useTimer';
@@ -13,6 +16,8 @@ import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES } from '../constant
 import { calculateScore } from '../utils/scoreCalculator';
 import { applyWangoEffect, applySabotageEffect } from '../utils/cardEffects';
 import { trackGameStart, trackGameEnd } from '../utils/analytics';
+import { checkAndUpdateDailyStreak, getDailyStreakData } from '../utils/dailyStreak';
+import { checkAchievements } from '../utils/achievements';
 
 export default function GameApp() {
   // Game state
@@ -22,9 +27,16 @@ export default function GameApp() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(1);
   const [round, setRound] = useState(1);
   const [gameStartTime, setGameStartTime] = useState(null);
+
+  // Daily streak and achievements
+  const [dailyStreakData, setDailyStreakData] = useState(null);
+  const [showDailyStreakBanner, setShowDailyStreakBanner] = useState(false);
+  const [newAchievements, setNewAchievements] = useState([]);
+  const [dailyBonusApplied, setDailyBonusApplied] = useState(false);
 
   // Question state
   const [answeredCorrectly, setAnsweredCorrectly] = useState(null);
@@ -37,6 +49,15 @@ export default function GameApp() {
   // Best streak tracking
   const [player1BestStreak, setPlayer1BestStreak] = useState(0);
   const [player2BestStreak, setPlayer2BestStreak] = useState(0);
+
+  // Check daily streak on app load
+  useEffect(() => {
+    const streakData = checkAndUpdateDailyStreak();
+    setDailyStreakData(streakData);
+    if (streakData.isNewDay) {
+      setShowDailyStreakBanner(true);
+    }
+  }, []);
 
   // Custom hooks
   const player1Hook = usePlayer();
@@ -73,9 +94,19 @@ export default function GameApp() {
     player1Hook.resetPlayer(settings.lives, settings.time);
     setPlayer1BestStreak(0);
 
+    // Apply daily streak bonus if not already applied
+    if (dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
+      player1Hook.updateScore(dailyStreakData.bonusPoints);
+      setDailyBonusApplied(true);
+    }
+
     if (gameMode === GAME_MODES.TWO_PLAYER) {
       player2Hook.resetPlayer(settings.lives, settings.time);
       setPlayer2BestStreak(0);
+      // Apply bonus to player 2 as well in two player mode
+      if (dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
+        player2Hook.updateScore(dailyStreakData.bonusPoints);
+      }
     }
 
     resetQuestions();
@@ -239,19 +270,43 @@ export default function GameApp() {
     setShowResults(true);
     setTimerActive(false);
 
+    const settings = DIFFICULTY_SETTINGS[difficulty];
+    const isTwoPlayer = gameMode === GAME_MODES.TWO_PLAYER;
+    const player1Score = player1Hook.player.score;
+    const player2Score = player2Hook.player.score;
+    const isPlayer1Winner = !isTwoPlayer || player1Score >= player2Score;
+
     // Track game end in Google Analytics
     if (gameStartTime) {
-      const duration = Math.floor((Date.now() - gameStartTime) / 1000); // Duration in seconds
-      const finalScore = gameMode === GAME_MODES.SOLO
-        ? player1Hook.player.score
-        : Math.max(player1Hook.player.score, player2Hook.player.score);
+      const duration = Math.floor((Date.now() - gameStartTime) / 1000);
+      const finalScore = isTwoPlayer
+        ? Math.max(player1Score, player2Score)
+        : player1Score;
 
       trackGameEnd(
-        gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
+        isTwoPlayer ? 'two-player' : 'solo',
         difficulty,
         finalScore,
         duration
       );
+    }
+
+    // Check achievements for player 1 (or winner in solo mode)
+    const dailyStreak = getDailyStreakData();
+    const achievementsEarned = checkAchievements({
+      score: player1Score,
+      bestStreak: player1BestStreak,
+      livesRemaining: player1Hook.player.lives,
+      maxLives: settings.lives,
+      difficulty,
+      dailyStreak: dailyStreak.currentStreak,
+      timeLeft: player1Hook.player.timeLeft,
+      isWinner: isPlayer1Winner,
+      isTwoPlayer
+    });
+
+    if (achievementsEarned.length > 0) {
+      setNewAchievements(achievementsEarned);
     }
   };
 
@@ -260,6 +315,7 @@ export default function GameApp() {
     setGameStarted(false);
     setShowResults(false);
     setShowLeaderboard(false);
+    setShowAchievements(false);
     setCurrentPlayer(1);
     setRound(1);
     setAnsweredCorrectly(null);
@@ -267,6 +323,7 @@ export default function GameApp() {
     setSabotageCard(null);
     setRemovedOptions([]);
     setTimerActive(false);
+    setNewAchievements([]);
     resetQuestions();
   };
 
@@ -315,14 +372,28 @@ export default function GameApp() {
     );
   }
 
+  if (showAchievements) {
+    return (
+      <AchievementsPage onBack={() => setShowAchievements(false)} />
+    );
+  }
+
   if (!gameMode) {
     return (
-      <ModeSelection
-        onSelectMode={handleSelectMode}
-        onViewLeaderboard={() => setShowLeaderboard(true)}
-        soundEnabled={soundEnabled}
-        onToggleSound={() => setSoundEnabled(!soundEnabled)}
-      />
+      <>
+        <ModeSelection
+          onSelectMode={handleSelectMode}
+          onViewLeaderboard={() => setShowLeaderboard(true)}
+          onViewAchievements={() => setShowAchievements(true)}
+          soundEnabled={soundEnabled}
+          onToggleSound={() => setSoundEnabled(!soundEnabled)}
+        />
+        {/* Daily Streak Banner */}
+        <DailyStreakBanner
+          streakData={dailyStreakData}
+          onClose={() => setShowDailyStreakBanner(false)}
+        />
+      </>
     );
   }
 
@@ -344,16 +415,23 @@ export default function GameApp() {
 
   if (showResults) {
     return (
-      <ResultsScreen
-        gameMode={gameMode}
-        player1={player1Hook.player}
-        player2={player2Hook.player}
-        player1BestStreak={player1BestStreak}
-        player2BestStreak={player2BestStreak}
-        round={round}
-        difficulty={difficulty}
-        onPlayAgain={resetGame}
-      />
+      <>
+        <ResultsScreen
+          gameMode={gameMode}
+          player1={player1Hook.player}
+          player2={player2Hook.player}
+          player1BestStreak={player1BestStreak}
+          player2BestStreak={player2BestStreak}
+          round={round}
+          difficulty={difficulty}
+          onPlayAgain={resetGame}
+        />
+        {/* Achievement Popup */}
+        <AchievementPopup
+          achievements={newAchievements}
+          onClose={() => setNewAchievements([])}
+        />
+      </>
     );
   }
 

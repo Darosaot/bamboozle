@@ -1,10 +1,15 @@
 import React from 'react';
-import { Baby, User, Users, Volume2, VolumeX, Trophy } from 'lucide-react';
+import { Baby, User, Users, Volume2, VolumeX, Trophy, Award, Flame, Calendar } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
 import DailyChallengeCard from './DailyChallengeCard';
+import { getDailyStreakData } from '../utils/dailyStreak';
+import { getAchievementProgress } from '../utils/achievements';
 
-const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggleSound }) => {
+const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, soundEnabled, onToggleSound }) => {
+  const dailyStreak = getDailyStreakData();
+  const achievementProgress = getAchievementProgress();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center">
@@ -13,9 +18,25 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggle
           BAMBOOZLE
         </h1>
         <h2 className="text-3xl font-bold text-blue-500 mb-4">Baby Edition DELUXE!</h2>
-        <p className="text-gray-600 mb-8 text-lg italic">
-          "¡El juego donde las reglas no importan y los puntos son inventados!"
+        <p className="text-gray-600 mb-6 text-lg italic">
+          "El juego donde las reglas no importan y los puntos son inventados!"
         </p>
+
+        {/* Daily Streak Mini Banner */}
+        {dailyStreak.currentStreak > 0 && (
+          <div className="bg-gradient-to-r from-orange-100 to-red-100 rounded-xl p-3 mb-6 flex items-center justify-center gap-4">
+            <div className="flex items-center gap-2">
+              <Flame className="w-6 h-6 text-orange-500" />
+              <span className="font-black text-orange-600 text-xl">{dailyStreak.currentStreak}</span>
+              <span className="text-orange-700 font-bold text-sm">dias seguidos</span>
+            </div>
+            {dailyStreak.longestStreak > dailyStreak.currentStreak && (
+              <div className="text-gray-500 text-sm">
+                Mejor: {dailyStreak.longestStreak}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <button
@@ -24,7 +45,7 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggle
           >
             <User className="w-16 h-16 mx-auto mb-4" />
             <h3 className="text-2xl font-black mb-2">MODO SOLO</h3>
-            <p className="text-sm">Juega tú solo y acumula puntos</p>
+            <p className="text-sm">Juega tu solo y acumula puntos</p>
           </button>
 
           <button
@@ -46,23 +67,36 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, soundEnabled, onToggle
           }} />
         </div>
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-3 mb-3">
           <button
             onClick={onViewLeaderboard}
-            className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-black py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105"
+            className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-black py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105"
           >
             <Trophy size={24} />
-            VER TABLA DE CLASIFICACIÓN
+            CLASIFICACION
           </button>
 
           <button
-            onClick={onToggleSound}
-            className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-all flex items-center justify-center gap-2"
+            onClick={onViewAchievements}
+            className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-black py-4 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 relative"
           >
-            {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
-            {soundEnabled ? 'Sonido ON' : 'Sonido OFF'}
+            <Award size={24} />
+            LOGROS
+            {achievementProgress.unlocked > 0 && (
+              <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                {achievementProgress.unlocked}
+              </span>
+            )}
           </button>
         </div>
+
+        <button
+          onClick={onToggleSound}
+          className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-all flex items-center justify-center gap-2"
+        >
+          {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          {soundEnabled ? 'Sonido ON' : 'Sonido OFF'}
+        </button>
 
         {/* Google AdSense Banner */}
         <AdBanner />
