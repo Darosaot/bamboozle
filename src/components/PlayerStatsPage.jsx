@@ -120,7 +120,7 @@ const PlayerStatsPage = ({ onBack }) => {
                 <h3 className="font-bold text-gray-700 mb-3">Por dificultad</h3>
                 <div className="grid grid-cols-3 gap-2">
                   {['easy', 'normal', 'hard'].map(diff => {
-                    const diffData = stats.byDifficulty[diff];
+                    const diffData = stats.byDifficulty?.[diff] || { played: 0, bestScore: 0 };
                     const labels = {
                       easy: { name: 'Fácil', color: 'bg-green-100 text-green-700' },
                       normal: { name: 'Normal', color: 'bg-yellow-100 text-yellow-700' },
@@ -129,7 +129,7 @@ const PlayerStatsPage = ({ onBack }) => {
                     return (
                       <div key={diff} className={`${labels[diff].color} rounded-lg p-3 text-center`}>
                         <p className="text-xs font-bold mb-1">{labels[diff].name}</p>
-                        <p className="text-lg font-black">{diffData.played}</p>
+                        <p className="text-lg font-black">{diffData.played || 0}</p>
                         <p className="text-xs opacity-75">partidas</p>
                         {diffData.bestScore > 0 && (
                           <p className="text-xs mt-1">Mejor: {diffData.bestScore}</p>
@@ -143,18 +143,14 @@ const PlayerStatsPage = ({ onBack }) => {
               {/* By Mode */}
               <div className="mb-6">
                 <h3 className="font-bold text-gray-700 mb-3">Por modo de juego</h3>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <div className="bg-blue-100 rounded-lg p-3 text-center">
                     <p className="text-xs font-bold text-blue-700 mb-1">Solo</p>
-                    <p className="text-lg font-black text-blue-700">{stats.byMode.solo.played}</p>
+                    <p className="text-lg font-black text-blue-700">{stats.byMode?.solo?.played || 0}</p>
                   </div>
                   <div className="bg-pink-100 rounded-lg p-3 text-center">
                     <p className="text-xs font-bold text-pink-700 mb-1">2 Jugadores</p>
-                    <p className="text-lg font-black text-pink-700">{stats.byMode['two-player'].played}</p>
-                  </div>
-                  <div className="bg-green-100 rounded-lg p-3 text-center">
-                    <p className="text-xs font-bold text-green-700 mb-1">Práctica</p>
-                    <p className="text-lg font-black text-green-700">{stats.byMode.practice.played}</p>
+                    <p className="text-lg font-black text-pink-700">{stats.byMode?.['two-player']?.played || 0}</p>
                   </div>
                 </div>
               </div>
