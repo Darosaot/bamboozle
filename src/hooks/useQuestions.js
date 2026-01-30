@@ -31,8 +31,13 @@ export const useQuestions = (initialCategories = []) => {
     let filteredQuestions = questions;
     if (selectedCategories.length > 0) {
       filteredQuestions = questions.filter(q =>
-        !q.category || selectedCategories.includes(q.category)
+        q.category && selectedCategories.includes(q.category)
       );
+    }
+
+    // If no questions match the filter, fallback to all questions
+    if (filteredQuestions.length === 0) {
+      filteredQuestions = questions;
     }
 
     const availableQuestions = filteredQuestions.filter(q => !usedQuestions.includes(q.q));
