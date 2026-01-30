@@ -500,10 +500,12 @@ export default function GameApp() {
           onToggleSound={() => setSoundEnabled(!soundEnabled)}
         />
         {/* Daily Streak Banner */}
-        <DailyStreakBanner
-          streakData={dailyStreakData}
-          onClose={() => setShowDailyStreakBanner(false)}
-        />
+        {showDailyStreakBanner && (
+          <DailyStreakBanner
+            streakData={dailyStreakData}
+            onClose={() => setShowDailyStreakBanner(false)}
+          />
+        )}
       </>
     );
   }
