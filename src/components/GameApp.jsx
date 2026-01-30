@@ -71,6 +71,23 @@ export default function GameApp() {
     }
   }, []);
 
+  // Warn before leaving if game is in progress
+  useEffect(() => {
+    if (gameStarted && !showResults) {
+      const handleBeforeUnload = (e) => {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [gameStarted, showResults]);
+
   // Custom hooks
   const player1Hook = usePlayer();
   const player2Hook = usePlayer();
@@ -130,7 +147,15 @@ export default function GameApp() {
     // Set categories filter for questions
     setCategories(selectedCategories);
     resetQuestions();
-    loadNewQuestion();
+    const firstQuestion = loadNewQuestion();
+
+    // Safeguard: If no questions available, show error
+    if (!firstQuestion) {
+      alert('No hay preguntas disponibles para las categorías seleccionadas. Por favor, selecciona otras categorías.');
+      setGameStarted(false);
+      return;
+    }
+
     setTimerActive(true);
 
     // Track game start in Google Analytics
@@ -399,7 +424,7 @@ export default function GameApp() {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
     const player = playerHook.player;
 
-    if (player.powerUps.fiftyFifty > 0 && removedOptions.length === 0 && currentQuestion) {
+    if (player.powerUps.fiftyFifty > 0 && removedOptions.length === 0 && currentQuestion && answeredCorrectly === null) {
       sounds.playPowerUp();
       const wrongOptions = currentQuestion.options
         .map((opt, idx) => idx)
@@ -414,17 +439,25 @@ export default function GameApp() {
   const useSkip = () => {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
 
-    if (playerHook.player.powerUps.skip > 0) {
+    if (playerHook.player.powerUps.skip > 0 && answeredCorrectly === null) {
       sounds.playPowerUp();
       playerHook.usePowerUp('skip');
-      nextTurn();
+      setTimerActive(false);
+      setAnsweredCorrectly(null);
+      setWangoCard(null);
+      setSabotageCard(null);
+      setRemovedOptions([]);
+
+      setTimeout(() => {
+        nextTurn();
+      }, 500);
     }
   };
 
   const useTimeFreeze = () => {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
 
-    if (playerHook.player.powerUps.timeFreeze > 0) {
+    if (playerHook.player.powerUps.timeFreeze > 0 && !timeFrozen && answeredCorrectly === null) {
       sounds.playPowerUp();
       setTimerActive(false);
       setTimeFrozen(true);

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Book, HelpCircle, Info, FileText, MessageCircle, Heart } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Home, Book, HelpCircle, Info, FileText, MessageCircle, Heart, ArrowLeft } from 'lucide-react';
 
 export default function NavigationMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
-    { path: '/', label: 'Jugar', icon: Home },
+    { path: '/', label: 'Volver al inicio', icon: ArrowLeft, action: 'home' },
     { path: '/acerca', label: 'Sobre Nosotros', icon: Info },
     { path: '/recursos', label: 'Recursos Educativos', icon: Book },
     { path: '/ayuda', label: 'Cómo Jugar', icon: HelpCircle },
@@ -17,6 +18,18 @@ export default function NavigationMenu() {
   ];
 
   const closeMenu = () => setIsOpen(false);
+
+  // Keyboard shortcut: ESC to close menu
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        closeMenu();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   return (
     <>
@@ -65,26 +78,33 @@ export default function NavigationMenu() {
           {/* Menu Items */}
           <nav className="flex-1 overflow-y-auto p-4">
             <ul className="space-y-2">
-              {menuItems.map((item) => {
+              {menuItems.map((item, index) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
+                const isHomeAction = item.action === 'home';
 
                 return (
-                  <li key={item.path}>
-                    <Link
-                      to={item.path}
-                      onClick={closeMenu}
-                      className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
-                        isActive
-                          ? 'bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                      aria-current={isActive ? 'page' : undefined}
-                    >
-                      <Icon size={20} className={isActive ? 'text-purple-600' : 'text-gray-500'} />
-                      <span>{item.label}</span>
-                    </Link>
-                  </li>
+                  <React.Fragment key={item.path}>
+                    <li>
+                      <Link
+                        to={item.path}
+                        onClick={closeMenu}
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+                          isHomeAction
+                            ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold hover:from-blue-600 hover:to-purple-600 shadow-md'
+                            : isActive
+                            ? 'bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 font-semibold'
+                            : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                        aria-current={isActive ? 'page' : undefined}
+                      >
+                        <Icon size={20} className={isHomeAction ? 'text-white' : isActive ? 'text-purple-600' : 'text-gray-500'} />
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                    {/* Divider after first item */}
+                    {index === 0 && <div className="border-t border-gray-200 my-3"></div>}
+                  </React.Fragment>
                 );
               })}
             </ul>
