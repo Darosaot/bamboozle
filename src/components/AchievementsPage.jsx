@@ -2,6 +2,7 @@ import React from 'react';
 import { Award, ArrowLeft, Lock, Trophy } from 'lucide-react';
 import { getAllAchievementsWithStatus, getAchievementProgress } from '../utils/achievements';
 import { getDailyStreakData } from '../utils/dailyStreak';
+import AdBanner from './AdBanner';
 
 const AchievementsPage = ({ onBack }) => {
   const achievements = getAllAchievementsWithStatus();
@@ -132,6 +133,11 @@ const AchievementsPage = ({ onBack }) => {
             </div>
           );
         })}
+
+        {/* Google AdSense Banner */}
+        <div className="bg-white rounded-3xl shadow-2xl p-6">
+          <AdBanner />
+        </div>
       </div>
     </div>
   );

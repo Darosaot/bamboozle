@@ -2,6 +2,7 @@ import React from 'react';
 import { User, Users, Clock, Heart, Zap } from 'lucide-react';
 import { GAME_MODES, DIFFICULTY_SETTINGS } from '../constants/gameConfig';
 import CategorySelector from './CategorySelector';
+import AdBanner from './AdBanner';
 
 const MAX_NAME_LENGTH = 15;
 
@@ -149,6 +150,9 @@ const PlayerSetup = ({
         >
           ← Volver
         </button>
+
+        {/* Google AdSense Banner */}
+        <AdBanner />
       </div>
     </div>
   );

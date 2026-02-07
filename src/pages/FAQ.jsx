@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import AdBanner from '../components/AdBanner';
 
@@ -197,6 +198,13 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
+      <Helmet>
+        <title>Preguntas Frecuentes - Bamboozle Baby Deluxe | Juego Educativo para Padres</title>
+        <meta name="description" content="Preguntas frecuentes sobre Bamboozle Baby Deluxe: modos de juego, puntuación, niveles de dificultad, power-ups y más. Todo lo que necesitas saber para jugar." />
+        <meta property="og:title" content="FAQ - Bamboozle Baby Deluxe" />
+        <meta property="og:description" content="Preguntas frecuentes sobre el juego educativo de trivia para padres. Modos de juego, puntuación, dificultad y más." />
+        <link rel="canonical" href="https://babybamboozle.netlify.app/preguntas-frecuentes" />
+      </Helmet>
       <div className="max-w-4xl mx-auto">
         <Link
           to="/"

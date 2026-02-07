@@ -1,6 +1,7 @@
 import React from 'react';
 import { BarChart3, Trophy, Target, Zap, Clock, Gamepad2, Award, TrendingUp } from 'lucide-react';
 import { getPlayerStats, calculateDerivedStats, resetPlayerStats } from '../utils/playerStats';
+import AdBanner from './AdBanner';
 
 const StatCard = ({ icon: Icon, label, value, color, subtext }) => (
   <div className="bg-white rounded-xl p-4 shadow-md">
@@ -190,6 +191,11 @@ const PlayerStatsPage = ({ onBack }) => {
               )}
             </>
           )}
+        </div>
+
+        {/* Google AdSense Banner */}
+        <div className="bg-white rounded-3xl shadow-2xl p-6 mb-4">
+          <AdBanner />
         </div>
 
         {/* Back Button */}

@@ -1,10 +1,33 @@
-import React from 'react';
-import { Share2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Share2, Check } from 'lucide-react';
 import { trackSocialShare } from '../utils/analytics';
 
 const SocialShare = ({ score, gameMode, difficulty }) => {
-  const shareText = `¡Conseguí ${score} puntos en Bamboozle Baby! ¿Puedes superarme? 🍼`;
-  const shareUrl = 'https://bamboozle-baby-deluxe.netlify.app/';
+  const [nativeShared, setNativeShared] = useState(false);
+  const difficultyLabels = { easy: 'Facil', normal: 'Normal', hard: 'Dificil' };
+  const diffLabel = difficultyLabels[difficulty] || difficulty;
+  const shareText = `Consegui ${score} puntos en Bamboozle Baby Deluxe (${diffLabel})! Pon a prueba tus conocimientos sobre bebes y embarazo:`;
+  const shareUrl = 'https://babybamboozle.netlify.app/';
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Bamboozle Baby Deluxe',
+          text: shareText,
+          url: shareUrl
+        });
+        trackSocialShare('native', score);
+        setNativeShared(true);
+        setTimeout(() => setNativeShared(false), 3000);
+      } catch (err) {
+        // User cancelled share - not an error
+        if (err.name !== 'AbortError') {
+          console.error('Share failed:', err);
+        }
+      }
+    }
+  };
 
   const handleShare = (platform) => {
     trackSocialShare(platform, score);
@@ -31,8 +54,28 @@ const SocialShare = ({ score, gameMode, difficulty }) => {
     <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-4">
       <div className="flex items-center gap-2 mb-3">
         <Share2 size={20} className="text-purple-600" />
-        <h3 className="font-bold text-purple-700">¡Comparte tu puntuación!</h3>
+        <h3 className="font-bold text-purple-700">Comparte tu puntuacion!</h3>
       </div>
+
+      {/* Native Share API button (mobile-first) */}
+      {typeof navigator !== 'undefined' && navigator.share && (
+        <button
+          onClick={handleNativeShare}
+          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2 mb-3"
+        >
+          {nativeShared ? (
+            <>
+              <Check size={20} />
+              Compartido!
+            </>
+          ) : (
+            <>
+              <Share2 size={20} />
+              Compartir resultado
+            </>
+          )}
+        </button>
+      )}
 
       <div className="flex gap-3 justify-center">
         {/* WhatsApp */}
@@ -73,7 +116,7 @@ const SocialShare = ({ score, gameMode, difficulty }) => {
       </div>
 
       <p className="text-xs text-gray-600 text-center mt-3">
-        Ayúdanos a crecer compartiendo con otros padres
+        Ayudanos a crecer compartiendo con otros padres
       </p>
     </div>
   );

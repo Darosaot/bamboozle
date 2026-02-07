@@ -5,6 +5,8 @@ import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
 import SocialShare from './SocialShare';
 import ReferralCard from './ReferralCard';
+import SupportUs from './SupportUs';
+import NewsletterSignup from './NewsletterSignup';
 
 const ResultsScreen = ({
   gameMode,
@@ -105,15 +107,21 @@ const ResultsScreen = ({
           {/* Referral Card */}
           <ReferralCard playerName={player1.name} />
 
+          {/* Google AdSense Banner - Pre-action placement */}
+          <AdBanner />
+
+          {/* Newsletter Signup */}
+          <NewsletterSignup />
+
+          {/* Support Us */}
+          <SupportUs />
+
           <button
             onClick={onPlayAgain}
             className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
           >
             ¡JUGAR DE NUEVO!
           </button>
-
-          {/* Google AdSense Banner */}
-          <AdBanner />
         </div>
       </div>
     );
@@ -174,15 +182,21 @@ const ResultsScreen = ({
         {/* Referral Card - Show winner's referral */}
         <ReferralCard playerName={player1.score > player2.score ? player1.name : player2.name} />
 
+        {/* Google AdSense Banner - Pre-action placement */}
+        <AdBanner />
+
+        {/* Newsletter Signup */}
+        <NewsletterSignup />
+
+        {/* Support Us */}
+        <SupportUs />
+
         <button
           onClick={onPlayAgain}
           className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-black text-xl py-4 rounded-xl hover:from-green-600 hover:to-blue-600 transform hover:scale-105 transition-all shadow-lg"
         >
           ¡JUGAR DE NUEVO!
         </button>
-
-        {/* Google AdSense Banner */}
-        <AdBanner />
       </div>
     </div>
   );
