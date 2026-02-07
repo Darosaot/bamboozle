@@ -12,7 +12,7 @@ const SupportUs = ({ compact = false }) => {
   if (compact) {
     return (
       <a
-        href="buymeacoffee.com/mrexperiment"
+        href="https://buymeacoffee.com/mrexperiment"
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleSupportClick}
@@ -38,7 +38,7 @@ const SupportUs = ({ compact = false }) => {
       </p>
 
       <a
-        href="buymeacoffee.com/mrexperiment"
+        href="https://buymeacoffee.com/mrexperiment"
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleSupportClick}
