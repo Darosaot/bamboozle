@@ -75,7 +75,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm text-purple-200">
               <li>
                 <a
-                  href="buymeacoffee.com/Mrexperiment"
+                  href="https://buymeacoffee.com/mrexperiment"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => trackEvent('support_click', { location: 'footer' })}
