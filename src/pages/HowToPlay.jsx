@@ -1,11 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Gamepad2, Users, Trophy, Zap, AlertTriangle, Timer, Heart, Target } from 'lucide-react';
 import AdBanner from '../components/AdBanner';
 
 export default function HowToPlay() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
+      <Helmet>
+        <title>Cómo Jugar Bamboozle Baby Deluxe - Guía Completa de Reglas y Estrategias</title>
+        <meta name="description" content="Aprende a jugar Bamboozle Baby Deluxe: modos de juego, sistema de puntuación, power-ups, cartas WANGO, cartas de sabotaje y estrategias para ganar." />
+        <meta property="og:title" content="Cómo Jugar - Bamboozle Baby Deluxe" />
+        <meta property="og:description" content="Guía completa de reglas, puntuación, power-ups y estrategias para dominar el juego de trivia para padres." />
+        <link rel="canonical" href="https://babybamboozle.netlify.app/ayuda" />
+      </Helmet>
       <div className="max-w-4xl mx-auto">
         <Link
           to="/"

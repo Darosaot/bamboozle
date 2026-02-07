@@ -2,6 +2,7 @@ import React from 'react';
 import { Baby, User, Users, Volume2, VolumeX, Trophy, Award, Flame, BarChart3 } from 'lucide-react';
 import { GAME_MODES } from '../constants/gameConfig';
 import AdBanner from './AdBanner';
+import SupportUs from './SupportUs';
 import DailyChallengeCard from './DailyChallengeCard';
 import { getDailyStreakData } from '../utils/dailyStreak';
 import { getAchievementProgress } from '../utils/achievements';
@@ -108,6 +109,11 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
 
         {/* Google AdSense Banner */}
         <AdBanner />
+
+        {/* Support Us CTA */}
+        <div className="mt-4 text-center">
+          <SupportUs compact={true} />
+        </div>
       </div>
     </div>
   );

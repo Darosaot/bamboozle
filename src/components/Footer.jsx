@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart } from 'lucide-react';
+import { Heart, Coffee } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 export default function Footer() {
   return (
@@ -70,7 +71,22 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-3">Legal</h4>
+            <h4 className="font-semibold mb-3">Apoyanos</h4>
+            <ul className="space-y-2 text-sm text-purple-200">
+              <li>
+                <a
+                  href="https://buymeacoffee.com/bamboozlebaby"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('support_click', { location: 'footer' })}
+                  className="hover:text-white transition-colors flex items-center gap-1"
+                >
+                  <Coffee size={14} />
+                  Invitanos un cafe
+                </a>
+              </li>
+            </ul>
+            <h4 className="font-semibold mb-3 mt-4">Legal</h4>
             <ul className="space-y-2 text-sm text-purple-200">
               <li>
                 <Link to="/privacidad" className="hover:text-white transition-colors">

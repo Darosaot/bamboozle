@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Baby, Heart, Moon, Utensils, Brain, Shield, AlertCircle, BookOpen } from 'lucide-react';
 import AdBanner from '../components/AdBanner';
 
@@ -17,6 +18,13 @@ export default function EducationalResources() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 p-4">
+      <Helmet>
+        <title>Recursos Educativos para Padres - Embarazo, Bebés y Crianza | Bamboozle Baby</title>
+        <meta name="description" content="Guías completas sobre embarazo trimestre a trimestre, cuidado del recién nacido, sueño infantil, nutrición, desarrollo y seguridad del bebé. Información basada en evidencia científica." />
+        <meta property="og:title" content="Recursos Educativos para Padres - Bamboozle Baby Deluxe" />
+        <meta property="og:description" content="Guías completas sobre embarazo, cuidado del recién nacido, sueño infantil, nutrición y seguridad. Información basada en evidencia científica para padres." />
+        <link rel="canonical" href="https://babybamboozle.netlify.app/recursos" />
+      </Helmet>
       <div className="max-w-6xl mx-auto">
         <Link
           to="/"
@@ -165,6 +173,8 @@ export default function EducationalResources() {
                     </div>
                   </div>
                 </section>
+                {/* Mid-content ad placement */}
+                <AdBanner slot="auto" format="auto" responsive={true} />
               </div>
             )}
 
@@ -226,6 +236,9 @@ export default function EducationalResources() {
                     </div>
                   </div>
                 </section>
+
+                {/* Mid-content ad placement */}
+                <AdBanner slot="auto" format="auto" responsive={true} />
 
                 <section className="bg-green-50 p-6 rounded-lg">
                   <h3 className="text-2xl font-semibold text-green-700 mb-3">Señales de un Bebé Saludable</h3>
