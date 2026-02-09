@@ -31,7 +31,7 @@ const GameScreen = ({
   const isSolo = gameMode === GAME_MODES.SOLO;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 p-4">
+    <main role="main" aria-label="Pantalla de juego" className="min-h-screen bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Time Frozen Indicator */}
         {timeFrozen && (
@@ -106,7 +106,7 @@ const GameScreen = ({
         {/* Sabotage Card */}
         {sabotageCard && <SabotageCard card={sabotageCard} />}
       </div>
-    </div>
+    </main>
   );
 };
 

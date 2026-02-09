@@ -87,9 +87,10 @@ const QuestionCard = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {question.options.map((option, index) => (
           <button
-            key={index}
+            key={option}
             onClick={() => handleAnswer(index)}
             disabled={answeredCorrectly !== null || removedOptions.includes(index)}
+            aria-label={`Opción ${index + 1}: ${option}`}
             className={`p-5 rounded-2xl font-bold text-lg transition-all transform shadow-lg flex items-center justify-center gap-2 ${getOptionStyle(index)}`}
           >
             {answeredCorrectly !== null && index === question.correct && (

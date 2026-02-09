@@ -94,8 +94,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error completing challenge:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to complete challenge',
-      message: error.message
+      error: 'Failed to complete challenge'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

@@ -42,12 +42,17 @@ export const useQuestions = (initialCategories = []) => {
 
     const availableQuestions = filteredQuestions.filter(q => !usedQuestions.includes(q.q));
 
-    let questionPool = availableQuestions.length > 0 ? availableQuestions : filteredQuestions;
-
+    // If all questions used, reset and pick from the full pool
+    let questionPool;
     if (availableQuestions.length === 0) {
-      setUsedQuestions([]);
+      questionPool = filteredQuestions;
+      const randomQ = questionPool[Math.floor(Math.random() * questionPool.length)];
+      setCurrentQuestion(randomQ);
+      setUsedQuestions([randomQ.q]);
+      return randomQ;
     }
 
+    questionPool = availableQuestions;
     const randomQ = questionPool[Math.floor(Math.random() * questionPool.length)];
 
     setCurrentQuestion(randomQ);

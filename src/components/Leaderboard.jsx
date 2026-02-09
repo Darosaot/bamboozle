@@ -24,6 +24,7 @@ const Leaderboard = ({ onBack }) => {
       params.append('limit', '50');
 
       const response = await fetch(`/api/get-leaderboard?${params.toString()}`);
+      if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
 
       if (data.success) {
@@ -88,28 +89,34 @@ const Leaderboard = ({ onBack }) => {
           <div className="flex gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-600" />
-              <select
-                value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value)}
-                className="px-4 py-2 rounded-lg border-2 border-purple-300 focus:border-purple-500 outline-none font-bold"
-              >
-                <option value="all">Todas las dificultades</option>
-                <option value="easy">Fácil</option>
-                <option value="normal">Normal</option>
-                <option value="hard">Difícil</option>
-              </select>
+              <label>
+                <span className="sr-only">Filtrar por dificultad</span>
+                <select
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value)}
+                  className="px-4 py-2 rounded-lg border-2 border-purple-300 focus:border-purple-500 outline-none font-bold"
+                >
+                  <option value="all">Todas las dificultades</option>
+                  <option value="easy">Fácil</option>
+                  <option value="normal">Normal</option>
+                  <option value="hard">Difícil</option>
+                </select>
+              </label>
             </div>
 
             <div>
-              <select
-                value={gameMode}
-                onChange={(e) => setGameMode(e.target.value)}
-                className="px-4 py-2 rounded-lg border-2 border-purple-300 focus:border-purple-500 outline-none font-bold"
-              >
-                <option value="all">Todos los modos</option>
-                <option value="solo">Solo</option>
-                <option value="two-player">Dos jugadores</option>
-              </select>
+              <label>
+                <span className="sr-only">Filtrar por modo de juego</span>
+                <select
+                  value={gameMode}
+                  onChange={(e) => setGameMode(e.target.value)}
+                  className="px-4 py-2 rounded-lg border-2 border-purple-300 focus:border-purple-500 outline-none font-bold"
+                >
+                  <option value="all">Todos los modos</option>
+                  <option value="solo">Solo</option>
+                  <option value="two-player">Dos jugadores</option>
+                </select>
+              </label>
             </div>
           </div>
         </div>

@@ -19,49 +19,60 @@ const ResultsScreen = ({
   onPlayAgain
 }) => {
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
-  // Auto-save scores when component mounts
-  useEffect(() => {
-    const saveScores = async () => {
-      try {
-        // Save player 1 score (use best streak instead of current)
-        await fetch('/api/save-score', {
+  const saveScores = async () => {
+    setSaveError(false);
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000);
+
+      const res1 = await fetch('/api/save-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          playerName: player1.name,
+          score: player1.score,
+          difficulty: difficulty || 'normal',
+          gameMode: gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
+          streak: player1BestStreak,
+          roundsWon: player1.roundsWon
+        })
+      });
+
+      if (!res1.ok) throw new Error('Failed to save player 1 score');
+
+      if (gameMode === GAME_MODES.TWO_PLAYER) {
+        const res2 = await fetch('/api/save-score', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
-            playerName: player1.name,
-            score: player1.score,
+            playerName: player2.name,
+            score: player2.score,
             difficulty: difficulty || 'normal',
-            gameMode: gameMode === GAME_MODES.SOLO ? 'solo' : 'two-player',
-            streak: player1BestStreak,
-            roundsWon: player1.roundsWon
+            gameMode: 'two-player',
+            streak: player2BestStreak,
+            roundsWon: player2.roundsWon
           })
         });
 
-        // Save player 2 score if two-player mode
-        if (gameMode === GAME_MODES.TWO_PLAYER) {
-          await fetch('/api/save-score', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              playerName: player2.name,
-              score: player2.score,
-              difficulty: difficulty || 'normal',
-              gameMode: 'two-player',
-              streak: player2BestStreak,
-              roundsWon: player2.roundsWon
-            })
-          });
-        }
-
-        setSaved(true);
-      } catch (error) {
-        console.error('Error saving scores:', error);
+        if (!res2.ok) throw new Error('Failed to save player 2 score');
       }
-    };
 
+      clearTimeout(timeout);
+      setSaved(true);
+    } catch (error) {
+      console.error('Error saving scores:', error);
+      setSaveError(true);
+    }
+  };
+
+  // Auto-save scores when component mounts
+  useEffect(() => {
     saveScores();
-  }, [player1, player2, player1BestStreak, player2BestStreak, difficulty, gameMode]);
+  }, []);
 
   if (gameMode === GAME_MODES.SOLO) {
     const rank = getRank(player1.score);
@@ -98,6 +109,13 @@ const ResultsScreen = ({
           {saved && (
             <div className="bg-green-100 border-2 border-green-500 rounded-xl p-3 text-green-700 font-bold text-center mb-4 text-sm">
               ✅ Puntuación guardada
+            </div>
+          )}
+
+          {saveError && (
+            <div className="bg-red-100 border-2 border-red-500 rounded-xl p-3 text-red-700 font-bold text-center mb-4 text-sm">
+              No se pudo guardar la puntuación.
+              <button onClick={saveScores} className="ml-2 underline hover:no-underline">Reintentar</button>
             </div>
           )}
 
@@ -169,6 +187,13 @@ const ResultsScreen = ({
         {saved && (
           <div className="bg-green-100 border-2 border-green-500 rounded-xl p-3 text-green-700 font-bold text-center mb-4 text-sm">
             ✅ Puntuaciones guardadas
+          </div>
+        )}
+
+        {saveError && (
+          <div className="bg-red-100 border-2 border-red-500 rounded-xl p-3 text-red-700 font-bold text-center mb-4 text-sm">
+            No se pudo guardar las puntuaciones.
+            <button onClick={saveScores} className="ml-2 underline hover:no-underline">Reintentar</button>
           </div>
         )}
 

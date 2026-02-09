@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import ModeSelection from './ModeSelection';
 import PlayerSetup from './PlayerSetup';
 import GameScreen from './GameScreen';
@@ -49,6 +49,7 @@ export default function GameApp() {
   const [sabotageCard, setSabotageCard] = useState(null);
   const [timerActive, setTimerActive] = useState(false);
   const [timeFrozen, setTimeFrozen] = useState(false);
+  const [processingAnswer, setProcessingAnswer] = useState(false);
 
   // Best streak tracking
   const [player1BestStreak, setPlayer1BestStreak] = useState(0);
@@ -61,6 +62,29 @@ export default function GameApp() {
 
   // Category selection
   const [selectedCategories, setSelectedCategories] = useState([]);
+
+  // Track all active timeouts for cleanup
+  const timeoutIdsRef = useRef([]);
+
+  const addTimeout = useCallback((callback, delay) => {
+    const id = setTimeout(() => {
+      // Remove from tracking when it fires
+      timeoutIdsRef.current = timeoutIdsRef.current.filter(tid => tid !== id);
+      callback();
+    }, delay);
+    timeoutIdsRef.current.push(id);
+    return id;
+  }, []);
+
+  const clearAllTimeouts = useCallback(() => {
+    timeoutIdsRef.current.forEach(id => clearTimeout(id));
+    timeoutIdsRef.current = [];
+  }, []);
+
+  // Cleanup all timeouts on unmount
+  useEffect(() => {
+    return () => clearAllTimeouts();
+  }, [clearAllTimeouts]);
 
   // Check daily streak on app load
   useEffect(() => {
@@ -120,6 +144,7 @@ export default function GameApp() {
     setRound(1);
     setCurrentPlayer(1);
     setGameStartTime(Date.now());
+    setProcessingAnswer(false);
 
     player1Hook.resetPlayer(settings.lives, settings.time);
     setPlayer1BestStreak(0);
@@ -129,7 +154,7 @@ export default function GameApp() {
     setBestPositiveWangoStreak(0);
     setSabotageUsedCount(0);
 
-    // Apply daily streak bonus if not already applied
+    // Apply daily streak bonus to both players if applicable
     if (dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
       player1Hook.updateScore(dailyStreakData.bonusPoints);
       setDailyBonusApplied(true);
@@ -138,8 +163,8 @@ export default function GameApp() {
     if (gameMode === GAME_MODES.TWO_PLAYER) {
       player2Hook.resetPlayer(settings.lives, settings.time);
       setPlayer2BestStreak(0);
-      // Apply bonus to player 2 as well in two player mode
-      if (dailyStreakData && dailyStreakData.bonusPoints > 0 && !dailyBonusApplied) {
+      // Apply bonus to player 2 using dailyStreakData directly (flag already set above)
+      if (dailyStreakData && dailyStreakData.bonusPoints > 0) {
         player2Hook.updateScore(dailyStreakData.bonusPoints);
       }
     }
@@ -166,9 +191,11 @@ export default function GameApp() {
   };
 
   const handleAnswer = (selectedIndex) => {
-    if (answeredCorrectly !== null) return;
+    // Block if already answered or processing a previous answer chain
+    if (answeredCorrectly !== null || processingAnswer) return;
 
     setTimerActive(false);
+    setProcessingAnswer(true);
     const correct = selectedIndex === currentQuestion.correct;
     setAnsweredCorrectly(correct);
 
@@ -203,37 +230,40 @@ export default function GameApp() {
 
       if (player.lives - 1 <= 0) {
         sounds.playGameOver();
-        setTimeout(() => endGame(), 2000);
+        addTimeout(() => endGame(), 2000);
         return;
       }
     }
 
     // Card probability - trigger card if random is less than the probability
     if (Math.random() < CARD_PROBABILITIES.WANGO_BASE) {
-      setTimeout(() => {
+      addTimeout(() => {
         if (gameMode === GAME_MODES.TWO_PLAYER && Math.random() < CARD_PROBABILITIES.SABOTAGE_IN_WANGO) {
           const randomSabotage = sabotageCards[Math.floor(Math.random() * sabotageCards.length)];
           setSabotageCard(randomSabotage);
-          setTimeout(() => {
+          addTimeout(() => {
             handleSabotageEffect(randomSabotage);
           }, 2500);
         } else {
           const randomWango = wangoCards[Math.floor(Math.random() * wangoCards.length)];
           setWangoCard(randomWango);
-          setTimeout(() => {
+          addTimeout(() => {
             handleWangoEffect(randomWango);
           }, 2500);
         }
       }, 1500);
     } else {
-      setTimeout(() => {
+      addTimeout(() => {
         nextTurn();
       }, 2000);
     }
   };
 
   function handleTimeOut() {
+    if (processingAnswer) return;
+
     setTimerActive(false);
+    setProcessingAnswer(true);
     setAnsweredCorrectly(false);
 
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
@@ -244,9 +274,9 @@ export default function GameApp() {
     playerHook.updateLives(-1);
 
     if (player.lives - 1 <= 0) {
-      setTimeout(() => endGame(), 2000);
+      addTimeout(() => endGame(), 2000);
     } else {
-      setTimeout(() => nextTurn(), 2000);
+      addTimeout(() => nextTurn(), 2000);
     }
   }
 
@@ -273,7 +303,7 @@ export default function GameApp() {
       setPositiveWangoStreak(0);
     }
 
-    setTimeout(() => {
+    addTimeout(() => {
       nextTurn();
     }, 2000);
   };
@@ -299,7 +329,7 @@ export default function GameApp() {
     sounds.playSabotage();
     setSabotageUsedCount(prev => prev + 1);
 
-    setTimeout(() => {
+    addTimeout(() => {
       nextTurn();
     }, 2000);
   };
@@ -316,6 +346,7 @@ export default function GameApp() {
     setWangoCard(null);
     setSabotageCard(null);
     setRemovedOptions([]);
+    setProcessingAnswer(false);
 
     if (gameMode === GAME_MODES.TWO_PLAYER) {
       if (currentPlayer === 1) {
@@ -338,6 +369,8 @@ export default function GameApp() {
   const endGame = () => {
     setShowResults(true);
     setTimerActive(false);
+    setProcessingAnswer(false);
+    clearAllTimeouts();
 
     const settings = DIFFICULTY_SETTINGS[difficulty];
     const isTwoPlayer = gameMode === GAME_MODES.TWO_PLAYER;
@@ -400,6 +433,7 @@ export default function GameApp() {
   };
 
   const resetGame = () => {
+    clearAllTimeouts();
     setGameMode(null);
     setGameStarted(false);
     setShowResults(false);
@@ -413,6 +447,7 @@ export default function GameApp() {
     setSabotageCard(null);
     setRemovedOptions([]);
     setTimerActive(false);
+    setProcessingAnswer(false);
     setNewAchievements([]);
     setPositiveWangoStreak(0);
     setBestPositiveWangoStreak(0);
@@ -439,7 +474,7 @@ export default function GameApp() {
   const useSkip = () => {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
 
-    if (playerHook.player.powerUps.skip > 0 && answeredCorrectly === null) {
+    if (playerHook.player.powerUps.skip > 0 && answeredCorrectly === null && !processingAnswer) {
       sounds.playPowerUp();
       playerHook.usePowerUp('skip');
       setTimerActive(false);
@@ -448,7 +483,7 @@ export default function GameApp() {
       setSabotageCard(null);
       setRemovedOptions([]);
 
-      setTimeout(() => {
+      addTimeout(() => {
         nextTurn();
       }, 500);
     }
@@ -462,7 +497,7 @@ export default function GameApp() {
       setTimerActive(false);
       setTimeFrozen(true);
       playerHook.usePowerUp('timeFreeze');
-      setTimeout(() => {
+      addTimeout(() => {
         setTimeFrozen(false);
         setTimerActive(true);
       }, 10000);

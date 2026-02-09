@@ -95,8 +95,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error using referral:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to use referral',
-      message: error.message
+      error: 'Failed to use referral'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

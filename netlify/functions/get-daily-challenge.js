@@ -70,8 +70,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error fetching daily challenge:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to fetch daily challenge',
-      message: error.message
+      error: 'Failed to fetch daily challenge'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

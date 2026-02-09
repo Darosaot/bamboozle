@@ -5,14 +5,17 @@ const DailyChallengeCard = ({ onStartChallenge }) => {
   const [challenge, setChallenge] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchDailyChallenge();
   }, []);
 
   const fetchDailyChallenge = async () => {
+    setError(null);
     try {
       const response = await fetch('/api/get-daily-challenge');
+      if (!response.ok) throw new Error('Failed to fetch');
       const data = await response.json();
 
       if (data.success) {
@@ -21,6 +24,7 @@ const DailyChallengeCard = ({ onStartChallenge }) => {
       }
     } catch (error) {
       console.error('Error fetching daily challenge:', error);
+      setError('No se pudo cargar el desafío del día.');
     } finally {
       setLoading(false);
     }
@@ -30,6 +34,20 @@ const DailyChallengeCard = ({ onStartChallenge }) => {
     return (
       <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6 border-2 border-orange-200">
         <p className="text-center text-gray-600">Cargando desafío del día...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6 border-2 border-orange-200">
+        <p className="text-center text-red-600 font-bold mb-2">{error}</p>
+        <button
+          onClick={fetchDailyChallenge}
+          className="block mx-auto px-4 py-2 bg-orange-500 text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
