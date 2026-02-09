@@ -77,8 +77,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error creating referral:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to create referral',
-      message: error.message
+      error: 'Failed to create referral'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

@@ -28,7 +28,7 @@ const PlayerStats = ({
   const streakDisplay = getStreakDisplay();
 
   return (
-    <div className={`rounded-2xl shadow-xl p-${isSolo ? '6' : '4'} transition-all ${bgClass} ${timeFrozen ? 'animate-pulse' : ''}`}>
+    <div className={`rounded-2xl shadow-xl ${isSolo ? 'p-6' : 'p-4'} transition-all ${bgClass} ${timeFrozen ? 'animate-pulse' : ''}`}>
       <div className="flex justify-between items-center mb-2">
         <div>
           <p className={`${isSolo ? 'text-2xl' : 'text-lg'} font-black`}>{player.name}</p>
@@ -69,7 +69,7 @@ const PlayerStats = ({
         </div>
       </div>
       {isCurrentPlayer && (
-        <div className={`w-full ${isSolo ? 'bg-white bg-opacity-30' : 'bg-gray-200 bg-opacity-30'} rounded-full h-${isSolo ? '3' : '2'} ${isSolo ? 'mt-4' : ''}`}>
+        <div className={`w-full ${isSolo ? 'bg-white bg-opacity-30' : 'bg-gray-200 bg-opacity-30'} rounded-full ${isSolo ? 'h-3' : 'h-2'} ${isSolo ? 'mt-4' : ''}`}>
           <div
             className={`h-full ${timeFrozen ? 'bg-cyan-300' : 'bg-white'} rounded-full transition-all`}
             style={{ width: `${(player.timeLeft / maxTime) * 100}%` }}

@@ -8,43 +8,58 @@ const ReferralCard = ({ playerName }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchOrCreateReferral();
-  }, [playerName]);
+    const abortController = new AbortController();
+    const signal = abortController.signal;
 
-  const fetchOrCreateReferral = async () => {
-    try {
-      // First try to get existing referral
-      const statsRes = await fetch(`/api/get-referral-stats?playerName=${encodeURIComponent(playerName)}`);
-      const statsData = await statsRes.json();
+    const fetchOrCreateReferral = async () => {
+      try {
+        // First try to get existing referral
+        const statsRes = await fetch(`/api/get-referral-stats?playerName=${encodeURIComponent(playerName)}`, { signal });
+        if (!statsRes.ok) throw new Error('Failed to fetch referral stats');
+        const statsData = await statsRes.json();
 
-      if (statsData.success && statsData.data) {
-        setReferralCode(statsData.data.referral_code);
-        setStats(statsData.data);
-      } else {
-        // Create new referral
-        const createRes = await fetch('/api/create-referral', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ playerName })
-        });
-        const createData = await createRes.json();
+        if (statsData.success && statsData.data) {
+          setReferralCode(statsData.data.referral_code);
+          setStats(statsData.data);
+        } else {
+          // Create new referral
+          const createRes = await fetch('/api/create-referral', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ playerName }),
+            signal
+          });
+          if (!createRes.ok) throw new Error('Failed to create referral');
+          const createData = await createRes.json();
 
-        if (createData.success) {
-          setReferralCode(createData.referralCode);
-          // Fetch stats for new referral
-          const newStatsRes = await fetch(`/api/get-referral-stats?referralCode=${createData.referralCode}`);
-          const newStatsData = await newStatsRes.json();
-          if (newStatsData.success) {
-            setStats(newStatsData.data);
+          if (createData.success) {
+            setReferralCode(createData.referralCode);
+            // Fetch stats for new referral
+            const newStatsRes = await fetch(`/api/get-referral-stats?referralCode=${createData.referralCode}`, { signal });
+            if (!newStatsRes.ok) throw new Error('Failed to fetch new referral stats');
+            const newStatsData = await newStatsRes.json();
+            if (newStatsData.success) {
+              setStats(newStatsData.data);
+            }
           }
         }
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Error with referral:', error);
+        }
+      } finally {
+        if (!signal.aborted) {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      console.error('Error with referral:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchOrCreateReferral();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [playerName]);
 
   const copyToClipboard = () => {
     const referralUrl = `${window.location.origin}/?ref=${referralCode}`;

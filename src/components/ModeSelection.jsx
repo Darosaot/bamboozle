@@ -42,18 +42,20 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <button
             onClick={() => onSelectMode(GAME_MODES.SOLO)}
+            aria-label="Seleccionar modo solo"
             className="bg-gradient-to-br from-blue-500 to-purple-500 text-white p-8 rounded-2xl hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all shadow-xl"
           >
-            <User className="w-16 h-16 mx-auto mb-4" />
+            <User className="w-16 h-16 mx-auto mb-4" aria-hidden="true" />
             <h3 className="text-2xl font-black mb-2">MODO SOLO</h3>
             <p className="text-sm">Juega tu solo y acumula puntos</p>
           </button>
 
           <button
             onClick={() => onSelectMode(GAME_MODES.TWO_PLAYER)}
+            aria-label="Seleccionar modo dos jugadores"
             className="bg-gradient-to-br from-pink-500 to-orange-500 text-white p-8 rounded-2xl hover:from-pink-600 hover:to-orange-600 transform hover:scale-105 transition-all shadow-xl"
           >
-            <Users className="w-16 h-16 mx-auto mb-4" />
+            <Users className="w-16 h-16 mx-auto mb-4" aria-hidden="true" />
             <h3 className="text-2xl font-black mb-2">2 JUGADORES</h3>
             <p className="text-sm">Compite con un amigo</p>
           </button>
@@ -73,7 +75,7 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
             onClick={onViewLeaderboard}
             className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-black py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105"
           >
-            <Trophy size={24} />
+            <Trophy size={24} aria-hidden="true" />
             CLASIFICACION
           </button>
 
@@ -81,7 +83,7 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
             onClick={onViewAchievements}
             className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-black py-4 rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 relative"
           >
-            <Award size={24} />
+            <Award size={24} aria-hidden="true" />
             LOGROS
             {achievementProgress.unlocked > 0 && (
               <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -95,7 +97,7 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
           onClick={onViewStats}
           className="w-full bg-gradient-to-r from-indigo-400 to-blue-400 text-white font-black py-3 rounded-lg hover:from-indigo-500 hover:to-blue-500 transition-all shadow-lg flex items-center justify-center gap-2 transform hover:scale-105 mb-3"
         >
-          <BarChart3 size={20} />
+          <BarChart3 size={20} aria-hidden="true" />
           MIS ESTADÍSTICAS
         </button>
 
@@ -103,7 +105,7 @@ const ModeSelection = ({ onSelectMode, onViewLeaderboard, onViewAchievements, on
           onClick={onToggleSound}
           className="w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition-all flex items-center justify-center gap-2"
         >
-          {soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
+          {soundEnabled ? <Volume2 size={20} aria-hidden="true" /> : <VolumeX size={20} aria-hidden="true" />}
           {soundEnabled ? 'Sonido ON' : 'Sonido OFF'}
         </button>
 

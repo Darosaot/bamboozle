@@ -30,8 +30,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error fetching scores:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to fetch scores',
-      message: error.message
+      error: 'Failed to fetch scores'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

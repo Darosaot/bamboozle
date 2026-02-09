@@ -155,7 +155,7 @@ export const useSounds = (enabled = true) => {
   // Cleanup audio context on unmount
   useEffect(() => {
     return () => {
-      if (audioContextRef.current) {
+      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close();
       }
     };

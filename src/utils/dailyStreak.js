@@ -43,17 +43,17 @@ const saveDailyStreakData = (data) => {
  * Get today's date as YYYY-MM-DD string
  */
 const getTodayString = () => {
-  const today = new Date();
-  return today.toISOString().split('T')[0];
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
 /**
- * Get yesterday's date as YYYY-MM-DD string
+ * Get yesterday's date as YYYY-MM-DD string (local time)
  */
 const getYesterdayString = () => {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  return yesterday.toISOString().split('T')[0];
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
 /**

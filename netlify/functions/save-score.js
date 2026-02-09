@@ -45,11 +45,11 @@ export default async (req, context) => {
       });
     }
 
-    // Validate score range (anti-cheat)
+    // Validate score range (anti-cheat) - ~2x theoretical max per difficulty
     const maxScoresByDifficulty = {
-      easy: 15000,    // 8 rounds max, generous limit
-      normal: 20000,  // 10 rounds max
-      hard: 30000     // 12 rounds max
+      easy: 5000,
+      normal: 8000,
+      hard: 15000
     };
 
     if (score < 0 || score > maxScoresByDifficulty[difficulty]) {
@@ -93,8 +93,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error saving score:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to save score',
-      message: error.message
+      error: 'Failed to save score'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

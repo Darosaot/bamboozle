@@ -33,7 +33,7 @@ describe('ModeSelection', () => {
       />
     );
 
-    const soloButton = screen.getByRole('button', { name: /MODO SOLO/i });
+    const soloButton = screen.getByRole('button', { name: /Seleccionar modo solo/i });
     fireEvent.click(soloButton);
 
     expect(mockOnSelectMode).toHaveBeenCalledWith('solo');
@@ -51,7 +51,7 @@ describe('ModeSelection', () => {
       />
     );
 
-    const twoPlayerButton = screen.getByRole('button', { name: /2 JUGADORES/i });
+    const twoPlayerButton = screen.getByRole('button', { name: /Seleccionar modo dos jugadores/i });
     fireEvent.click(twoPlayerButton);
 
     expect(mockOnSelectMode).toHaveBeenCalledWith('2player');

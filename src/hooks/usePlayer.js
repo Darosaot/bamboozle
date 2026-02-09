@@ -54,13 +54,13 @@ export const usePlayer = () => {
   };
 
   const resetPlayer = (lives, timeLeft) => {
-    setPlayer({
+    setPlayer(prev => ({
       ...INITIAL_PLAYER_STATE,
-      name: player.name,
+      name: prev.name,
       lives,
       timeLeft,
       powerUps: { skip: 1, fiftyFifty: 1, timeFreeze: 1 }
-    });
+    }));
   };
 
   const setPlayerState = (newState) => {

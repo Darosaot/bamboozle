@@ -45,6 +45,22 @@ export default async (req, context) => {
       });
     }
 
+    // Validate score range (anti-cheat)
+    const maxScoresByDifficulty = {
+      easy: 5000,
+      normal: 8000,
+      hard: 15000
+    };
+
+    if (typeof score !== 'number' || score < 0 || score > maxScoresByDifficulty[difficulty]) {
+      return new Response(JSON.stringify({
+        error: 'Invalid score value'
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     const sql = neon(process.env.DATABASE_URL);
 
     await sql`
@@ -60,8 +76,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error adding score:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to add score',
-      message: error.message
+      error: 'Failed to add score'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

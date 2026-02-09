@@ -18,6 +18,7 @@ const PowerUps = ({
         <button
           onClick={onUseFiftyFifty}
           disabled={powerUps.fiftyFifty === 0 || disabled}
+          aria-label="Eliminar dos respuestas incorrectas"
           className={`flex-1 py-3 rounded-lg font-bold transition-all ${
             powerUps.fiftyFifty > 0 && !disabled
               ? 'bg-blue-500 text-white hover:bg-blue-600'
@@ -29,6 +30,7 @@ const PowerUps = ({
         <button
           onClick={onUseTimeFreeze}
           disabled={powerUps.timeFreeze === 0 || disabled}
+          aria-label="Congelar temporizador por 10 segundos"
           className={`flex-1 py-3 rounded-lg font-bold transition-all ${
             powerUps.timeFreeze > 0 && !disabled
               ? 'bg-cyan-500 text-white hover:bg-cyan-600'
@@ -40,6 +42,7 @@ const PowerUps = ({
         <button
           onClick={onUseSkip}
           disabled={powerUps.skip === 0 || disabled}
+          aria-label="Saltar pregunta"
           className={`flex-1 py-3 rounded-lg font-bold transition-all ${
             powerUps.skip > 0 && !disabled
               ? 'bg-purple-500 text-white hover:bg-purple-600'

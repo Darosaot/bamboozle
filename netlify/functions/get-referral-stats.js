@@ -92,8 +92,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error fetching referral stats:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to fetch referral stats',
-      message: error.message
+      error: 'Failed to fetch referral stats'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }

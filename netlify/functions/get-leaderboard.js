@@ -79,8 +79,7 @@ export default async (req, context) => {
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return new Response(JSON.stringify({
-      error: 'Failed to fetch leaderboard',
-      message: error.message
+      error: 'Failed to fetch leaderboard'
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
