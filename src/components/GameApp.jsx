@@ -14,7 +14,7 @@ import { useTimer } from '../hooks/useTimer';
 import { useSounds } from '../hooks/useSounds';
 import { wangoCards } from '../data/wangoCards';
 import { sabotageCards } from '../data/sabotageCards';
-import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES } from '../constants/gameConfig';
+import { DIFFICULTY_SETTINGS, GAME_MODES, CARD_PROBABILITIES, TIMEOUT_DELAYS, WRONG_ANSWER_PENALTY } from '../constants/gameConfig';
 import { calculateScore } from '../utils/scoreCalculator';
 import { applyWangoEffect, applySabotageEffect } from '../utils/cardEffects';
 import { trackGameStart, trackGameEnd } from '../utils/analytics';
@@ -224,13 +224,13 @@ export default function GameApp() {
       }
     } else {
       sounds.playIncorrect();
-      playerHook.updateScore(-50);
+      playerHook.updateScore(-WRONG_ANSWER_PENALTY);
       playerHook.updateLives(-1);
       playerHook.updateStreak(false);
 
       if (player.lives - 1 <= 0) {
         sounds.playGameOver();
-        addTimeout(() => endGame(), 2000);
+        addTimeout(() => endGame(), TIMEOUT_DELAYS.ANSWER_FEEDBACK);
         return;
       }
     }
@@ -243,19 +243,19 @@ export default function GameApp() {
           setSabotageCard(randomSabotage);
           addTimeout(() => {
             handleSabotageEffect(randomSabotage);
-          }, 2500);
+          }, TIMEOUT_DELAYS.CARD_EFFECT);
         } else {
           const randomWango = wangoCards[Math.floor(Math.random() * wangoCards.length)];
           setWangoCard(randomWango);
           addTimeout(() => {
             handleWangoEffect(randomWango);
-          }, 2500);
+          }, TIMEOUT_DELAYS.CARD_EFFECT);
         }
-      }, 1500);
+      }, TIMEOUT_DELAYS.CARD_SHOW);
     } else {
       addTimeout(() => {
         nextTurn();
-      }, 2000);
+      }, TIMEOUT_DELAYS.ANSWER_FEEDBACK);
     }
   };
 
@@ -269,14 +269,14 @@ export default function GameApp() {
     const playerHook = currentPlayer === 1 ? player1Hook : player2Hook;
     const player = playerHook.player;
 
-    playerHook.updateScore(-50);
+    playerHook.updateScore(-WRONG_ANSWER_PENALTY);
     playerHook.updateStreak(false);
     playerHook.updateLives(-1);
 
     if (player.lives - 1 <= 0) {
-      addTimeout(() => endGame(), 2000);
+      addTimeout(() => endGame(), TIMEOUT_DELAYS.ANSWER_FEEDBACK);
     } else {
-      addTimeout(() => nextTurn(), 2000);
+      addTimeout(() => nextTurn(), TIMEOUT_DELAYS.ANSWER_FEEDBACK);
     }
   }
 
@@ -305,7 +305,7 @@ export default function GameApp() {
 
     addTimeout(() => {
       nextTurn();
-    }, 2000);
+    }, TIMEOUT_DELAYS.ANSWER_FEEDBACK);
   };
 
   const handleSabotageEffect = (sabotage) => {
@@ -331,7 +331,7 @@ export default function GameApp() {
 
     addTimeout(() => {
       nextTurn();
-    }, 2000);
+    }, TIMEOUT_DELAYS.ANSWER_FEEDBACK);
   };
 
   const nextTurn = () => {
@@ -485,7 +485,7 @@ export default function GameApp() {
 
       addTimeout(() => {
         nextTurn();
-      }, 500);
+      }, TIMEOUT_DELAYS.SKIP_TRANSITION);
     }
   };
 
@@ -500,7 +500,7 @@ export default function GameApp() {
       addTimeout(() => {
         setTimeFrozen(false);
         setTimerActive(true);
-      }, 10000);
+      }, TIMEOUT_DELAYS.TIME_FREEZE_DURATION);
     }
   };
 

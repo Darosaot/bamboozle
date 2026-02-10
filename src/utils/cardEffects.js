@@ -1,3 +1,5 @@
+import { MYSTERY_EFFECTS } from '../constants/gameConfig';
+
 export const applyWangoEffect = (wango, currentScore, currentStreak, maxLives, currentLives) => {
   let finalScore = currentScore;
   let livesChange = 0;
@@ -25,8 +27,7 @@ export const applyWangoEffect = (wango, currentScore, currentStreak, maxLives, c
       isPositive = true;
       break;
     case "mystery":
-      const mysteryEffects = [200, -100, 'double', 'half', 500];
-      const mystery = mysteryEffects[Math.floor(Math.random() * mysteryEffects.length)];
+      const mystery = MYSTERY_EFFECTS[Math.floor(Math.random() * MYSTERY_EFFECTS.length)];
       if (mystery === 'double') {
         finalScore = currentScore * 2;
         isPositive = true;

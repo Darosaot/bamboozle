@@ -1,4 +1,5 @@
 // Daily Streak System - Tracks consecutive days of playing
+import { STREAK_BONUSES } from '../constants/gameConfig';
 
 const STORAGE_KEY = 'bamboozle_daily_streak';
 
@@ -88,23 +89,14 @@ export const checkAndUpdateDailyStreak = () => {
     data.currentStreak += 1;
     data.totalDaysPlayed += 1;
 
-    // Bonus points based on streak length
-    if (data.currentStreak >= 30) {
-      bonusPoints = 500;
-      streakMessage = `30+ dias seguidos! +${bonusPoints} pts bonus!`;
-    } else if (data.currentStreak >= 14) {
-      bonusPoints = 300;
-      streakMessage = `2 semanas seguidas! +${bonusPoints} pts bonus!`;
-    } else if (data.currentStreak >= 7) {
-      bonusPoints = 200;
-      streakMessage = `1 semana seguida! +${bonusPoints} pts bonus!`;
-    } else if (data.currentStreak >= 3) {
-      bonusPoints = 100;
-      streakMessage = `${data.currentStreak} dias seguidos! +${bonusPoints} pts bonus!`;
-    } else {
-      bonusPoints = 50;
-      streakMessage = `${data.currentStreak} dias seguidos! +${bonusPoints} pts bonus!`;
+    // Bonus points based on streak length (from config)
+    for (const tier of STREAK_BONUSES) {
+      if (data.currentStreak >= tier.min) {
+        bonusPoints = tier.points;
+        break;
+      }
     }
+    streakMessage = `${data.currentStreak} dias seguidos! +${bonusPoints} pts bonus!`;
 
     // Update longest streak
     if (data.currentStreak > data.longestStreak) {

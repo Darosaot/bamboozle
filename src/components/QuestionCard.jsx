@@ -87,7 +87,7 @@ const QuestionCard = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {question.options.map((option, index) => (
           <button
-            key={option}
+            key={`${question.q}-${index}`}
             onClick={() => handleAnswer(index)}
             disabled={answeredCorrectly !== null || removedOptions.includes(index)}
             aria-label={`Opción ${index + 1}: ${option}`}

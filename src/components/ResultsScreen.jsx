@@ -23,10 +23,9 @@ const ResultsScreen = ({
 
   const saveScores = async () => {
     setSaveError(false);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 15000);
-
       const res1 = await fetch('/api/save-score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,11 +60,12 @@ const ResultsScreen = ({
         if (!res2.ok) throw new Error('Failed to save player 2 score');
       }
 
-      clearTimeout(timeout);
       setSaved(true);
     } catch (error) {
       console.error('Error saving scores:', error);
       setSaveError(true);
+    } finally {
+      clearTimeout(timeout);
     }
   };
 
