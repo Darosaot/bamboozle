@@ -61,11 +61,23 @@ const ReferralCard = ({ playerName }) => {
     };
   }, [playerName]);
 
-  const copyToClipboard = () => {
+  const copyToClipboard = async () => {
     const referralUrl = `${window.location.origin}/?ref=${referralCode}`;
-    navigator.clipboard.writeText(referralUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(referralUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for browsers that don't support clipboard API
+      const textarea = document.createElement('textarea');
+      textarea.value = referralUrl;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (loading) {

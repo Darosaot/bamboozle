@@ -50,3 +50,5 @@ export const STREAK_BONUSES = [
 ];
 
 export const MYSTERY_EFFECTS = [200, -100, 'double', 'half', 500];
+
+export const WRONG_ANSWER_PENALTY = 50;
